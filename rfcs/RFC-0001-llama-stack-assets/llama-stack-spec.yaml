@@ -1,0 +1,2752 @@
+components:
+  responses: {}
+  schemas:
+    AgenticSystemCreateRequest:
+      additionalProperties: false
+      properties:
+        instance_config:
+          $ref: '#/components/schemas/AgenticSystemInstanceConfig'
+        model:
+          $ref: '#/components/schemas/InstructModel'
+      required:
+      - model
+      - instance_config
+      type: object
+    AgenticSystemCreateResponse:
+      additionalProperties: false
+      properties:
+        system_id:
+          type: string
+      required:
+      - system_id
+      type: object
+    AgenticSystemInstanceConfig:
+      additionalProperties: false
+      properties:
+        available_tools:
+          items:
+            $ref: '#/components/schemas/AgenticSystemToolDefinition'
+          type: array
+        debug_prefix_messages:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/SystemMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+            - $ref: '#/components/schemas/CompletionMessage'
+          type: array
+        input_shields:
+          items:
+            $ref: '#/components/schemas/ShieldDefinition'
+          type: array
+        instructions:
+          type: string
+        output_shields:
+          items:
+            $ref: '#/components/schemas/ShieldDefinition'
+          type: array
+        quantization_config:
+          oneOf:
+          - $ref: '#/components/schemas/Bf16QuantizationConfig'
+          - $ref: '#/components/schemas/Fp8QuantizationConfig'
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+      required:
+      - instructions
+      type: object
+    AgenticSystemSessionCreateRequest:
+      additionalProperties: false
+      properties:
+        session_name:
+          type: string
+        system_id:
+          type: string
+      required:
+      - system_id
+      - session_name
+      type: object
+    AgenticSystemSessionCreateResponse:
+      additionalProperties: false
+      properties:
+        session_id:
+          type: string
+      required:
+      - session_id
+      type: object
+    AgenticSystemStepResponse:
+      additionalProperties: false
+      properties:
+        step:
+          oneOf:
+          - $ref: '#/components/schemas/InferenceStep'
+          - $ref: '#/components/schemas/ToolExecutionStep'
+          - $ref: '#/components/schemas/ShieldCallStep'
+          - $ref: '#/components/schemas/MemoryRetrievalStep'
+      required:
+      - step
+      type: object
+    AgenticSystemToolDefinition:
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        execution_config:
+          $ref: '#/components/schemas/RestAPIExecutionConfig'
+        input_shields:
+          items:
+            $ref: '#/components/schemas/ShieldDefinition'
+          type: array
+        output_shields:
+          items:
+            $ref: '#/components/schemas/ShieldDefinition'
+          type: array
+        parameters:
+          additionalProperties:
+            $ref: '#/components/schemas/ToolParamDefinition'
+          type: object
+        tool_name:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinTool'
+          - type: string
+      required:
+      - tool_name
+      type: object
+    AgenticSystemTurnCreateRequest:
+      additionalProperties: false
+      properties:
+        messages:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+          type: array
+        override_config:
+          $ref: '#/components/schemas/AgenticSystemInstanceConfig'
+        session_id:
+          type: string
+        stream:
+          type: boolean
+        system_id:
+          type: string
+      required:
+      - system_id
+      - session_id
+      - messages
+      type: object
+    AgenticSystemTurnResponseStreamChunk:
+      description: Server side event (SSE) stream of these events
+    Attachment:
+      additionalProperties: false
+      properties:
+        mime_type:
+          type: string
+        url:
+          $ref: '#/components/schemas/URL'
+      required:
+      - url
+      - mime_type
+      type: object
+    BatchChatCompletionRequest:
+      additionalProperties: false
+      properties:
+        available_tools:
+          items:
+            $ref: '#/components/schemas/ToolDefinition'
+          type: array
+        logprobs:
+          additionalProperties: false
+          properties:
+            top_k:
+              type: integer
+          type: object
+        messages_batch:
+          items:
+            items:
+              oneOf:
+              - $ref: '#/components/schemas/UserMessage'
+              - $ref: '#/components/schemas/SystemMessage'
+              - $ref: '#/components/schemas/ToolResponseMessage'
+              - $ref: '#/components/schemas/CompletionMessage'
+            type: array
+          type: array
+        model:
+          $ref: '#/components/schemas/InstructModel'
+        quantization_config:
+          oneOf:
+          - $ref: '#/components/schemas/Bf16QuantizationConfig'
+          - $ref: '#/components/schemas/Fp8QuantizationConfig'
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+      required:
+      - model
+      - messages_batch
+      type: object
+    BatchChatCompletionResponse:
+      additionalProperties: false
+      properties:
+        completion_message_batch:
+          items:
+            $ref: '#/components/schemas/CompletionMessage'
+          type: array
+      required:
+      - completion_message_batch
+      type: object
+    BatchCompletionRequest:
+      additionalProperties: false
+      properties:
+        content_batch:
+          items:
+            oneOf:
+            - type: string
+            - $ref: '#/components/schemas/Attachment'
+            - items:
+                oneOf:
+                - type: string
+                - $ref: '#/components/schemas/Attachment'
+              type: array
+          type: array
+        logprobs:
+          additionalProperties: false
+          properties:
+            top_k:
+              type: integer
+          type: object
+        model:
+          $ref: '#/components/schemas/PretrainedModel'
+        quantization_config:
+          oneOf:
+          - $ref: '#/components/schemas/Bf16QuantizationConfig'
+          - $ref: '#/components/schemas/Fp8QuantizationConfig'
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+      required:
+      - model
+      - content_batch
+      type: object
+    BatchCompletionResponse:
+      additionalProperties: false
+      properties:
+        completion_message_batch:
+          items:
+            $ref: '#/components/schemas/CompletionMessage'
+          type: array
+      required:
+      - completion_message_batch
+      type: object
+    Bf16QuantizationConfig:
+      additionalProperties: false
+      properties:
+        type:
+          const: bf16
+          type: string
+      required:
+      - type
+      type: object
+    BuiltinShield:
+      enum:
+      - llama_guard
+      - code_scanner_guard
+      - third_party_shield
+      - injection_shield
+      - jailbreak_shield
+      type: string
+    BuiltinTool:
+      enum:
+      - brave_search
+      - wolfram_alpha
+      - photogen
+      - code_interpreter
+      type: string
+    ChatCompletionRequest:
+      additionalProperties: false
+      properties:
+        available_tools:
+          items:
+            $ref: '#/components/schemas/ToolDefinition'
+          type: array
+        logprobs:
+          additionalProperties: false
+          properties:
+            top_k:
+              type: integer
+          type: object
+        messages:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/SystemMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+            - $ref: '#/components/schemas/CompletionMessage'
+          type: array
+        model:
+          $ref: '#/components/schemas/InstructModel'
+        quantization_config:
+          oneOf:
+          - $ref: '#/components/schemas/Bf16QuantizationConfig'
+          - $ref: '#/components/schemas/Fp8QuantizationConfig'
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+        stream:
+          type: boolean
+      required:
+      - model
+      - messages
+      type: object
+    ChatCompletionResponseEvent:
+      additionalProperties: false
+      properties:
+        delta:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/ToolCallDelta'
+        event_type:
+          $ref: '#/components/schemas/ChatCompletionResponseEventType'
+        logprobs:
+          items:
+            $ref: '#/components/schemas/TokenLogProbs'
+          type: array
+        stop_reason:
+          $ref: '#/components/schemas/StopReason'
+      required:
+      - event_type
+      - delta
+      title: Chat completion response event.
+      type: object
+    ChatCompletionResponseEventType:
+      enum:
+      - start
+      - complete
+      - progress
+      type: string
+    ChatCompletionResponseStreamChunk:
+      additionalProperties: false
+      properties:
+        event:
+          $ref: '#/components/schemas/ChatCompletionResponseEvent'
+      required:
+      - event
+      title: SSE-stream of these events.
+      type: object
+    Checkpoint:
+      description: Checkpoint created during training runs
+    CompletionMessage:
+      additionalProperties: false
+      properties:
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/Attachment'
+          - items:
+              oneOf:
+              - type: string
+              - $ref: '#/components/schemas/Attachment'
+            type: array
+        role:
+          const: assistant
+          type: string
+        stop_reason:
+          $ref: '#/components/schemas/StopReason'
+        tool_calls:
+          items:
+            $ref: '#/components/schemas/ToolCall'
+          type: array
+      required:
+      - role
+      - content
+      - stop_reason
+      - tool_calls
+      type: object
+    CompletionRequest:
+      additionalProperties: false
+      properties:
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/Attachment'
+          - items:
+              oneOf:
+              - type: string
+              - $ref: '#/components/schemas/Attachment'
+            type: array
+        logprobs:
+          additionalProperties: false
+          properties:
+            top_k:
+              type: integer
+          type: object
+        model:
+          $ref: '#/components/schemas/PretrainedModel'
+        quantization_config:
+          oneOf:
+          - $ref: '#/components/schemas/Bf16QuantizationConfig'
+          - $ref: '#/components/schemas/Fp8QuantizationConfig'
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+        stream:
+          type: boolean
+      required:
+      - model
+      - content
+      type: object
+    CompletionResponseStreamChunk:
+      additionalProperties: false
+      properties:
+        delta:
+          type: string
+        logprobs:
+          items:
+            $ref: '#/components/schemas/TokenLogProbs'
+          type: array
+        stop_reason:
+          $ref: '#/components/schemas/StopReason'
+      required:
+      - delta
+      title: streamed completion response.
+      type: object
+    CreateDatasetRequest:
+      additionalProperties: false
+      properties:
+        dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+        uuid:
+          type: string
+      required:
+      - uuid
+      - dataset
+      title: Request to create a dataset.
+      type: object
+    DPOAlignmentConfig:
+      additionalProperties: false
+      properties:
+        epsilon:
+          type: number
+        gamma:
+          type: number
+        reward_clip:
+          type: number
+        reward_scale:
+          type: number
+      required:
+      - reward_scale
+      - reward_clip
+      - epsilon
+      - gamma
+      type: object
+    DialogGenerations:
+      additionalProperties: false
+      properties:
+        dialog:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/SystemMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+            - $ref: '#/components/schemas/CompletionMessage'
+          type: array
+        sampled_generations:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/SystemMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+            - $ref: '#/components/schemas/CompletionMessage'
+          type: array
+      required:
+      - dialog
+      - sampled_generations
+      type: object
+    DoraFinetuningConfig:
+      additionalProperties: false
+      properties:
+        alpha:
+          type: integer
+        apply_lora_to_mlp:
+          type: boolean
+        apply_lora_to_output:
+          type: boolean
+        lora_attn_modules:
+          items:
+            type: string
+          type: array
+        rank:
+          type: integer
+      required:
+      - lora_attn_modules
+      - apply_lora_to_mlp
+      - apply_lora_to_output
+      - rank
+      - alpha
+      type: object
+    EvaluateQuestionAnsweringRequest:
+      additionalProperties: false
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/Checkpoint'
+        dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+        job_uuid:
+          type: string
+        metrics:
+          items:
+            enum:
+            - em
+            - f1
+            type: string
+          type: array
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+      required:
+      - job_uuid
+      - dataset
+      - checkpoint
+      - sampling_params
+      - metrics
+      title: Request to evaluate question answering.
+      type: object
+    EvaluateSummarizationRequest:
+      additionalProperties: false
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/Checkpoint'
+        dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+        job_uuid:
+          type: string
+        metrics:
+          items:
+            enum:
+            - rouge
+            - bleu
+            type: string
+          type: array
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+      required:
+      - job_uuid
+      - dataset
+      - checkpoint
+      - sampling_params
+      - metrics
+      title: Request to evaluate summarization.
+      type: object
+    EvaluateTextGenerationRequest:
+      additionalProperties: false
+      properties:
+        checkpoint:
+          $ref: '#/components/schemas/Checkpoint'
+        dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+        job_uuid:
+          type: string
+        metrics:
+          items:
+            enum:
+            - perplexity
+            - rouge
+            - bleu
+            type: string
+          type: array
+        sampling_params:
+          $ref: '#/components/schemas/SamplingParams'
+      required:
+      - job_uuid
+      - dataset
+      - checkpoint
+      - sampling_params
+      - metrics
+      title: Request to evaluate text generation.
+      type: object
+    EvaluationJob:
+      additionalProperties: false
+      properties:
+        job_uuid:
+          type: string
+      required:
+      - job_uuid
+      type: object
+    EvaluationJobArtifactsResponse:
+      additionalProperties: false
+      properties:
+        job_uuid:
+          type: string
+      required:
+      - job_uuid
+      title: Artifacts of a evaluation job.
+      type: object
+    EvaluationJobLogStream:
+      additionalProperties: false
+      properties:
+        job_uuid:
+          type: string
+      required:
+      - job_uuid
+      type: object
+    EvaluationJobStatusResponse:
+      additionalProperties: false
+      properties:
+        job_uuid:
+          type: string
+      required:
+      - job_uuid
+      type: object
+    FinetuningAlgorithm:
+      enum:
+      - full
+      - lora
+      - qlora
+      - dora
+      type: string
+    Fp8QuantizationConfig:
+      additionalProperties: false
+      properties:
+        type:
+          const: fp8
+          type: string
+      required:
+      - type
+      type: object
+    InferenceStep:
+      additionalProperties: false
+      properties:
+        completed_at:
+          format: date-time
+          type: string
+        model_response:
+          $ref: '#/components/schemas/CompletionMessage'
+        started_at:
+          format: date-time
+          type: string
+        step_id:
+          type: string
+        step_type:
+          const: inference
+          type: string
+        turn_id:
+          type: string
+      required:
+      - turn_id
+      - step_id
+      - step_type
+      - model_response
+      type: object
+    InstructModel:
+      enum:
+      - llama3_8b_chat
+      - llama3_70b_chat
+      type: string
+    LoraFinetuningConfig:
+      additionalProperties: false
+      properties:
+        alpha:
+          type: integer
+        apply_lora_to_mlp:
+          type: boolean
+        apply_lora_to_output:
+          type: boolean
+        lora_attn_modules:
+          items:
+            type: string
+          type: array
+        rank:
+          type: integer
+      required:
+      - lora_attn_modules
+      - apply_lora_to_mlp
+      - apply_lora_to_output
+      - rank
+      - alpha
+      type: object
+    MemoryBank:
+      additionalProperties: false
+      properties:
+        memory_bank_id:
+          type: string
+        memory_bank_name:
+          type: string
+      required:
+      - memory_bank_id
+      - memory_bank_name
+      type: object
+    MemoryBankDocument:
+      additionalProperties: false
+      properties:
+        content:
+          contentEncoding: base64
+          type: string
+        document_id:
+          type: string
+        metadata:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        mime_type:
+          type: string
+      required:
+      - document_id
+      - content
+      - metadata
+      - mime_type
+      type: object
+    MemoryRetrievalStep:
+      additionalProperties: false
+      properties:
+        completed_at:
+          format: date-time
+          type: string
+        documents:
+          items:
+            $ref: '#/components/schemas/MemoryBankDocument'
+          type: array
+        memory_bank_ids:
+          items:
+            type: string
+          type: array
+        scores:
+          items:
+            type: number
+          type: array
+        started_at:
+          format: date-time
+          type: string
+        step_id:
+          type: string
+        step_type:
+          const: memory_retrieval
+          type: string
+        turn_id:
+          type: string
+      required:
+      - turn_id
+      - step_id
+      - step_type
+      - memory_bank_ids
+      - documents
+      - scores
+      type: object
+    OnViolationAction:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+    OptimizerConfig:
+      additionalProperties: false
+      properties:
+        lr:
+          type: number
+        lr_min:
+          type: number
+        optimizer_type:
+          enum:
+          - adam
+          - adamw
+          - sgd
+          type: string
+        weight_decay:
+          type: number
+      required:
+      - optimizer_type
+      - lr
+      - lr_min
+      - weight_decay
+      type: object
+    PostTrainingJob:
+      additionalProperties: false
+      properties:
+        job_uuid:
+          type: string
+      required:
+      - job_uuid
+      type: object
+    PostTrainingJobArtifactsResponse:
+      additionalProperties: false
+      properties:
+        checkpoints:
+          items:
+            $ref: '#/components/schemas/Checkpoint'
+          type: array
+        job_uuid:
+          type: string
+      required:
+      - job_uuid
+      - checkpoints
+      title: Artifacts of a finetuning job.
+      type: object
+    PostTrainingJobLogStream:
+      additionalProperties: false
+      properties:
+        job_uuid:
+          type: string
+        log_lines:
+          items:
+            type: string
+          type: array
+      required:
+      - job_uuid
+      - log_lines
+      title: Stream of logs from a finetuning job.
+      type: object
+    PostTrainingJobStatus:
+      enum:
+      - running
+      - completed
+      - failed
+      - scheduled
+      type: string
+    PostTrainingJobStatusResponse:
+      additionalProperties: false
+      properties:
+        checkpoints:
+          items:
+            $ref: '#/components/schemas/Checkpoint'
+          type: array
+        completed_at:
+          format: date-time
+          type: string
+        job_uuid:
+          type: string
+        resources_allocated:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        scheduled_at:
+          format: date-time
+          type: string
+        started_at:
+          format: date-time
+          type: string
+        status:
+          $ref: '#/components/schemas/PostTrainingJobStatus'
+      required:
+      - job_uuid
+      - status
+      - checkpoints
+      title: Status of a finetuning job.
+      type: object
+    PostTrainingRLHFRequest:
+      additionalProperties: false
+      properties:
+        algorithm:
+          $ref: '#/components/schemas/RLHFAlgorithm'
+        algorithm_config:
+          $ref: '#/components/schemas/DPOAlignmentConfig'
+        dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+        finetuned_model:
+          $ref: '#/components/schemas/URL'
+        hyperparam_search_config:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        job_uuid:
+          type: string
+        logger_config:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        optimizer_config:
+          $ref: '#/components/schemas/OptimizerConfig'
+        training_config:
+          $ref: '#/components/schemas/TrainingConfig'
+        validation_dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+      required:
+      - job_uuid
+      - finetuned_model
+      - dataset
+      - validation_dataset
+      - algorithm
+      - algorithm_config
+      - optimizer_config
+      - training_config
+      - hyperparam_search_config
+      - logger_config
+      title: Request to finetune a model.
+      type: object
+    PostTrainingSFTRequest:
+      additionalProperties: false
+      properties:
+        algorithm:
+          $ref: '#/components/schemas/FinetuningAlgorithm'
+        algorithm_config:
+          oneOf:
+          - $ref: '#/components/schemas/LoraFinetuningConfig'
+          - $ref: '#/components/schemas/QLoraFinetuningConfig'
+          - $ref: '#/components/schemas/DoraFinetuningConfig'
+        dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+        hyperparam_search_config:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        job_uuid:
+          type: string
+        logger_config:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        model:
+          $ref: '#/components/schemas/PretrainedModel'
+        optimizer_config:
+          $ref: '#/components/schemas/OptimizerConfig'
+        training_config:
+          $ref: '#/components/schemas/TrainingConfig'
+        validation_dataset:
+          $ref: '#/components/schemas/TrainEvalDataset'
+      required:
+      - job_uuid
+      - model
+      - dataset
+      - validation_dataset
+      - algorithm
+      - algorithm_config
+      - optimizer_config
+      - training_config
+      - hyperparam_search_config
+      - logger_config
+      title: Request to finetune a model.
+      type: object
+    PretrainedModel:
+      description: The type of the model. This is used to determine the model family
+        and SKU.
+    QLoraFinetuningConfig:
+      additionalProperties: false
+      properties:
+        alpha:
+          type: integer
+        apply_lora_to_mlp:
+          type: boolean
+        apply_lora_to_output:
+          type: boolean
+        lora_attn_modules:
+          items:
+            type: string
+          type: array
+        rank:
+          type: integer
+      required:
+      - lora_attn_modules
+      - apply_lora_to_mlp
+      - apply_lora_to_output
+      - rank
+      - alpha
+      type: object
+    RLHFAlgorithm:
+      enum:
+      - dpo
+      type: string
+    RestAPIExecutionConfig:
+      additionalProperties: false
+      properties:
+        body:
+          additionalProperties:
+            type: string
+          type: object
+        headers:
+          additionalProperties:
+            type: string
+          type: object
+        method:
+          $ref: '#/components/schemas/RestAPIMethod'
+        params:
+          additionalProperties:
+            type: string
+          type: object
+        url:
+          $ref: '#/components/schemas/URL'
+      required:
+      - url
+      - method
+      type: object
+    RestAPIMethod:
+      enum:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      type: string
+    RewardModel:
+      enum:
+      - llama3_70b_reward
+      - llama3_405b_reward
+      type: string
+    RewardScoringRequest:
+      additionalProperties: false
+      properties:
+        dialog_generations:
+          items:
+            $ref: '#/components/schemas/DialogGenerations'
+          type: array
+        model:
+          $ref: '#/components/schemas/RewardModel'
+      required:
+      - dialog_generations
+      - model
+      title: Request to score a reward function. A list of prompts and a list of responses
+        per prompt.
+      type: object
+    RewardScoringResponse:
+      additionalProperties: false
+      properties:
+        scored_generations:
+          items:
+            $ref: '#/components/schemas/ScoredDialogGenerations'
+          type: array
+      required:
+      - scored_generations
+      title: Response from the reward scoring. Batch of (prompt, response, score)
+        tuples that pass the threshold.
+      type: object
+    SamplingParams:
+      additionalProperties: false
+      properties:
+        max_tokens:
+          type: integer
+        repetition_penalty:
+          type: number
+        strategy:
+          $ref: '#/components/schemas/SamplingStrategy'
+        temperature:
+          type: number
+        top_k:
+          type: integer
+        top_p:
+          type: number
+      required:
+      - strategy
+      type: object
+    SamplingStrategy:
+      enum:
+      - greedy
+      - top_p
+      - top_k
+      type: string
+    ScoredDialogGenerations:
+      additionalProperties: false
+      properties:
+        dialog:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/SystemMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+            - $ref: '#/components/schemas/CompletionMessage'
+          type: array
+        scored_generations:
+          items:
+            $ref: '#/components/schemas/ScoredMessage'
+          type: array
+      required:
+      - dialog
+      - scored_generations
+      type: object
+    ScoredMessage:
+      additionalProperties: false
+      properties:
+        message:
+          oneOf:
+          - $ref: '#/components/schemas/UserMessage'
+          - $ref: '#/components/schemas/SystemMessage'
+          - $ref: '#/components/schemas/ToolResponseMessage'
+          - $ref: '#/components/schemas/CompletionMessage'
+        score:
+          type: number
+      required:
+      - message
+      - score
+      type: object
+    Session:
+      additionalProperties: false
+      properties:
+        session_id:
+          type: string
+        session_name:
+          type: string
+        started_at:
+          format: date-time
+          type: string
+        turns:
+          items:
+            $ref: '#/components/schemas/Turn'
+          type: array
+      required:
+      - session_id
+      - session_name
+      - turns
+      - started_at
+      title: A single session of an interaction with an Agentic System.
+      type: object
+    ShieldCallStep:
+      additionalProperties: false
+      properties:
+        completed_at:
+          format: date-time
+          type: string
+        response:
+          $ref: '#/components/schemas/ShieldResponse'
+        started_at:
+          format: date-time
+          type: string
+        step_id:
+          type: string
+        step_type:
+          const: shield_call
+          type: string
+        turn_id:
+          type: string
+      required:
+      - turn_id
+      - step_id
+      - step_type
+      - response
+      type: object
+    ShieldDefinition:
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        execution_config:
+          $ref: '#/components/schemas/RestAPIExecutionConfig'
+        on_violation_action:
+          $ref: '#/components/schemas/OnViolationAction'
+        parameters:
+          additionalProperties:
+            $ref: '#/components/schemas/ToolParamDefinition'
+          type: object
+        shield_type:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinShield'
+          - type: string
+      required:
+      - shield_type
+      - on_violation_action
+      type: object
+    ShieldResponse:
+      additionalProperties: false
+      properties:
+        is_violation:
+          type: boolean
+        shield_type:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinShield'
+          - type: string
+        violation_return_message:
+          type: string
+        violation_type:
+          type: string
+      required:
+      - shield_type
+      - is_violation
+      type: object
+    StopReason:
+      enum:
+      - end_of_turn
+      - end_of_message
+      - out_of_tokens
+      type: string
+    SyntheticDataGenerationRequest:
+      additionalProperties: false
+      properties:
+        dialogs:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/SystemMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+            - $ref: '#/components/schemas/CompletionMessage'
+          type: array
+        filtering_function:
+          enum:
+          - none
+          - random
+          - top_k
+          - top_p
+          - top_k_top_p
+          - sigmoid
+          title: The type of filtering function.
+          type: string
+        model:
+          $ref: '#/components/schemas/RewardModel'
+      required:
+      - dialogs
+      - filtering_function
+      title: Request to generate synthetic data. A small batch of prompts and a filtering
+        function
+      type: object
+    SyntheticDataGenerationResponse:
+      additionalProperties: false
+      properties:
+        statistics:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+        synthetic_data:
+          items:
+            $ref: '#/components/schemas/ScoredDialogGenerations'
+          type: array
+      required:
+      - synthetic_data
+      title: Response from the synthetic data generation. Batch of (prompt, response,
+        score) tuples that pass the threshold.
+      type: object
+    SystemMessage:
+      additionalProperties: false
+      properties:
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/Attachment'
+          - items:
+              oneOf:
+              - type: string
+              - $ref: '#/components/schemas/Attachment'
+            type: array
+        role:
+          const: system
+          type: string
+      required:
+      - role
+      - content
+      type: object
+    TokenLogProbs:
+      additionalProperties: false
+      properties:
+        logprobs_by_token:
+          additionalProperties:
+            type: number
+          type: object
+      required:
+      - logprobs_by_token
+      type: object
+    ToolCall:
+      additionalProperties: false
+      properties:
+        arguments:
+          additionalProperties:
+            oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+            - type: 'null'
+            - items:
+                oneOf:
+                - type: string
+                - type: integer
+                - type: number
+                - type: boolean
+                - type: 'null'
+              type: array
+            - additionalProperties:
+                oneOf:
+                - type: string
+                - type: integer
+                - type: number
+                - type: boolean
+                - type: 'null'
+              type: object
+          type: object
+        call_id:
+          type: string
+        tool_name:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinTool'
+          - type: string
+      required:
+      - call_id
+      - tool_name
+      - arguments
+      type: object
+    ToolCallDelta:
+      additionalProperties: false
+      properties:
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/ToolCall'
+        parse_status:
+          $ref: '#/components/schemas/ToolCallParseStatus'
+      required:
+      - content
+      - parse_status
+      type: object
+    ToolCallParseStatus:
+      enum:
+      - started
+      - in_progress
+      - failure
+      - success
+      type: string
+    ToolDefinition:
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        parameters:
+          additionalProperties:
+            $ref: '#/components/schemas/ToolParamDefinition'
+          type: object
+        tool_name:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinTool'
+          - type: string
+      required:
+      - tool_name
+      type: object
+    ToolExecutionStep:
+      additionalProperties: false
+      properties:
+        completed_at:
+          format: date-time
+          type: string
+        started_at:
+          format: date-time
+          type: string
+        step_id:
+          type: string
+        step_type:
+          const: tool_execution
+          type: string
+        tool_calls:
+          items:
+            $ref: '#/components/schemas/ToolCall'
+          type: array
+        tool_responses:
+          items:
+            $ref: '#/components/schemas/ToolResponse'
+          type: array
+        turn_id:
+          type: string
+      required:
+      - turn_id
+      - step_id
+      - step_type
+      - tool_calls
+      - tool_responses
+      type: object
+    ToolParamDefinition:
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        param_type:
+          type: string
+        required:
+          type: boolean
+      required:
+      - param_type
+      type: object
+    ToolResponse:
+      additionalProperties: false
+      properties:
+        call_id:
+          type: string
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/Attachment'
+          - items:
+              oneOf:
+              - type: string
+              - $ref: '#/components/schemas/Attachment'
+            type: array
+        tool_name:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinTool'
+          - type: string
+      required:
+      - call_id
+      - tool_name
+      - content
+      type: object
+    ToolResponseMessage:
+      additionalProperties: false
+      properties:
+        call_id:
+          type: string
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/Attachment'
+          - items:
+              oneOf:
+              - type: string
+              - $ref: '#/components/schemas/Attachment'
+            type: array
+        role:
+          const: ipython
+          type: string
+        tool_name:
+          oneOf:
+          - $ref: '#/components/schemas/BuiltinTool'
+          - type: string
+      required:
+      - role
+      - call_id
+      - tool_name
+      - content
+      type: object
+    TrainEvalDataset:
+      additionalProperties: false
+      properties:
+        columns:
+          additionalProperties:
+            $ref: '#/components/schemas/TrainEvalDatasetColumnType'
+          type: object
+        content_url:
+          $ref: '#/components/schemas/URL'
+        metadata:
+          additionalProperties:
+            oneOf:
+            - type: 'null'
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+            - type: object
+          type: object
+      required:
+      - columns
+      - content_url
+      title: Dataset to be used for training or evaluating language models.
+      type: object
+    TrainEvalDatasetColumnType:
+      enum:
+      - dialog
+      - text
+      - media
+      - number
+      - json
+      type: string
+    TrainingConfig:
+      additionalProperties: false
+      properties:
+        batch_size:
+          type: integer
+        enable_activation_checkpointing:
+          type: boolean
+        fsdp_cpu_offload:
+          type: boolean
+        memory_efficient_fsdp_wrap:
+          type: boolean
+        n_epochs:
+          type: integer
+        n_iters:
+          type: integer
+        shuffle:
+          type: boolean
+      required:
+      - n_epochs
+      - batch_size
+      - shuffle
+      - n_iters
+      - enable_activation_checkpointing
+      - memory_efficient_fsdp_wrap
+      - fsdp_cpu_offload
+      type: object
+    Turn:
+      additionalProperties: false
+      properties:
+        completed_at:
+          format: date-time
+          type: string
+        input_messages:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserMessage'
+            - $ref: '#/components/schemas/ToolResponseMessage'
+          type: array
+        output_message:
+          $ref: '#/components/schemas/CompletionMessage'
+        session_id:
+          type: string
+        started_at:
+          format: date-time
+          type: string
+        steps:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/InferenceStep'
+            - $ref: '#/components/schemas/ToolExecutionStep'
+            - $ref: '#/components/schemas/ShieldCallStep'
+            - $ref: '#/components/schemas/MemoryRetrievalStep'
+          type: array
+        turn_id:
+          type: string
+      required:
+      - turn_id
+      - session_id
+      - input_messages
+      - steps
+      - output_message
+      - started_at
+      title: A single turn in an interaction with an Agentic System.
+      type: object
+    URL:
+      format: uri
+      pattern: ^(https?://|file://|data:)
+      type: string
+    UserMessage:
+      additionalProperties: false
+      properties:
+        content:
+          oneOf:
+          - type: string
+          - $ref: '#/components/schemas/Attachment'
+          - items:
+              oneOf:
+              - type: string
+              - $ref: '#/components/schemas/Attachment'
+            type: array
+        role:
+          const: user
+          type: string
+      required:
+      - role
+      - content
+      type: object
+info:
+  description: "This is the specification of the llama stack that provides\n     \
+    \           a set of endpoints and their corresponding interfaces that are tailored\
+    \ to\n                best leverage Llama Models. The specification is still in\
+    \ draft and subject to change.\n                Generated at 2024-07-23 02:02:16.069876"
+  title: '[DRAFT] Llama Stack Specification'
+  version: 0.0.1
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+openapi: 3.1.0
+paths:
+  /agentic_system/create:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgenticSystemCreateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenticSystemCreateResponse'
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/delete:
+    delete:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/memory_bank/attach:
+    post:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: session_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+              type: array
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/memory_bank/detach:
+    post:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: session_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+              type: array
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/session/create:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgenticSystemSessionCreateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenticSystemSessionCreateResponse'
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/session/delete:
+    delete:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: session_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/session/get:
+    post:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: session_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - items:
+                  type: string
+                type: array
+              - type: 'null'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/step/get:
+    get:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: turn_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: step_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenticSystemStepResponse'
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/turn/create:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgenticSystemTurnCreateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenticSystemTurnResponseStreamChunk'
+          description: OK
+      tags:
+      - AgenticSystem
+  /agentic_system/turn/get:
+    get:
+      parameters:
+      - in: query
+        name: agent_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: turn_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Turn'
+          description: OK
+      tags:
+      - AgenticSystem
+  /datasets/create:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatasetRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - Datasets
+  /datasets/delete:
+    delete:
+      parameters:
+      - in: query
+        name: dataset_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+      - Datasets
+  /datasets/get:
+    get:
+      parameters:
+      - in: query
+        name: dataset_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainEvalDataset'
+          description: OK
+      tags:
+      - Datasets
+  /evaluate/job/artifacts:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJobArtifactsResponse'
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/job/cancel:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/job/logs:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJobLogStream'
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/job/status:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJobStatusResponse'
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/jobs:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/jsonl:
+              schema:
+                $ref: '#/components/schemas/EvaluationJob'
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/question_answering/:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluateQuestionAnsweringRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJob'
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/summarization/:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluateSummarizationRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJob'
+          description: OK
+      tags:
+      - Evaluations
+  /evaluate/text_generation/:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluateTextGenerationRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJob'
+          description: OK
+      tags:
+      - Evaluations
+  /inference/batch_chat_completion:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchChatCompletionRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchChatCompletionResponse'
+          description: OK
+      tags:
+      - Inference
+  /inference/batch_completion:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCompletionRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchCompletionResponse'
+          description: OK
+      tags:
+      - Inference
+  /inference/chat_completion:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponseStreamChunk'
+          description: SSE-stream of these events.
+      tags:
+      - Inference
+  /inference/completion:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletionRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponseStreamChunk'
+          description: streamed completion response.
+      tags:
+      - Inference
+  /memory_bank/delete:
+    post:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+              type: array
+        required: true
+      responses:
+        '200':
+          content:
+            application/jsonl:
+              schema:
+                type: string
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_bank/get:
+    post:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+              type: array
+        required: true
+      responses:
+        '200':
+          content:
+            application/jsonl:
+              schema:
+                $ref: '#/components/schemas/MemoryBankDocument'
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_bank/insert:
+    post:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/MemoryBankDocument'
+              type: array
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_bank/update:
+    post:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/MemoryBankDocument'
+              type: array
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_banks/create:
+    post:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: bank_name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/MemoryBankDocument'
+              type: array
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_banks/drop:
+    delete:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_banks/get:
+    get:
+      parameters:
+      - in: query
+        name: bank_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/jsonl:
+              schema:
+                $ref: '#/components/schemas/MemoryBank'
+          description: OK
+      tags:
+      - MemoryBanks
+  /memory_banks/list:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/jsonl:
+              schema:
+                $ref: '#/components/schemas/MemoryBank'
+          description: OK
+      tags:
+      - MemoryBanks
+  /post_training/job/artifacts:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTrainingJobArtifactsResponse'
+          description: OK
+      tags:
+      - PostTraining
+  /post_training/job/cancel:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+      - PostTraining
+  /post_training/job/logs:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTrainingJobLogStream'
+          description: OK
+      tags:
+      - PostTraining
+  /post_training/job/status:
+    get:
+      parameters:
+      - in: query
+        name: job_uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTrainingJobStatusResponse'
+          description: OK
+      tags:
+      - PostTraining
+  /post_training/jobs:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/jsonl:
+              schema:
+                $ref: '#/components/schemas/PostTrainingJob'
+          description: OK
+      tags:
+      - PostTraining
+  /post_training/preference_optimize:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTrainingRLHFRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTrainingJob'
+          description: OK
+      tags:
+      - PostTraining
+  /post_training/supervised_fine_tune:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTrainingSFTRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTrainingJob'
+          description: OK
+      tags:
+      - PostTraining
+  /reward_scoring/score:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RewardScoringRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardScoringResponse'
+          description: OK
+      tags:
+      - RewardScoring
+  /synthetic_data_generation/generate:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyntheticDataGenerationRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyntheticDataGenerationResponse'
+          description: OK
+      tags:
+      - SyntheticDataGeneration
+security:
+- Default: []
+servers:
+- url: http://any-hosted-llama-stack.com
+tags:
+- name: PostTraining
+- name: MemoryBanks
+- name: RewardScoring
+- name: Datasets
+- name: Evaluations
+- name: AgenticSystem
+- name: Inference
+- name: SyntheticDataGeneration
+- description: <SchemaDefinition schemaRef="#/components/schemas/Attachment" />
+  name: Attachment
+- description: <SchemaDefinition schemaRef="#/components/schemas/BatchChatCompletionRequest"
+    />
+  name: BatchChatCompletionRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/Bf16QuantizationConfig"
+    />
+  name: Bf16QuantizationConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/BuiltinTool" />
+  name: BuiltinTool
+- description: <SchemaDefinition schemaRef="#/components/schemas/CompletionMessage"
+    />
+  name: CompletionMessage
+- description: <SchemaDefinition schemaRef="#/components/schemas/Fp8QuantizationConfig"
+    />
+  name: Fp8QuantizationConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/InstructModel" />
+  name: InstructModel
+- description: <SchemaDefinition schemaRef="#/components/schemas/SamplingParams" />
+  name: SamplingParams
+- description: <SchemaDefinition schemaRef="#/components/schemas/SamplingStrategy"
+    />
+  name: SamplingStrategy
+- description: <SchemaDefinition schemaRef="#/components/schemas/StopReason" />
+  name: StopReason
+- description: <SchemaDefinition schemaRef="#/components/schemas/SystemMessage" />
+  name: SystemMessage
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolCall" />
+  name: ToolCall
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolDefinition" />
+  name: ToolDefinition
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolParamDefinition"
+    />
+  name: ToolParamDefinition
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolResponseMessage"
+    />
+  name: ToolResponseMessage
+- description: <SchemaDefinition schemaRef="#/components/schemas/URL" />
+  name: URL
+- description: <SchemaDefinition schemaRef="#/components/schemas/UserMessage" />
+  name: UserMessage
+- description: <SchemaDefinition schemaRef="#/components/schemas/BatchChatCompletionResponse"
+    />
+  name: BatchChatCompletionResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/BatchCompletionRequest"
+    />
+  name: BatchCompletionRequest
+- description: 'The type of the model. This is used to determine the model family
+    and SKU.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/PretrainedModel" />'
+  name: PretrainedModel
+- description: <SchemaDefinition schemaRef="#/components/schemas/BatchCompletionResponse"
+    />
+  name: BatchCompletionResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/ChatCompletionRequest"
+    />
+  name: ChatCompletionRequest
+- description: 'Chat completion response event.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/ChatCompletionResponseEvent"
+    />'
+  name: ChatCompletionResponseEvent
+- description: <SchemaDefinition schemaRef="#/components/schemas/ChatCompletionResponseEventType"
+    />
+  name: ChatCompletionResponseEventType
+- description: 'SSE-stream of these events.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/ChatCompletionResponseStreamChunk"
+    />'
+  name: ChatCompletionResponseStreamChunk
+- description: <SchemaDefinition schemaRef="#/components/schemas/TokenLogProbs" />
+  name: TokenLogProbs
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolCallDelta" />
+  name: ToolCallDelta
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolCallParseStatus"
+    />
+  name: ToolCallParseStatus
+- description: <SchemaDefinition schemaRef="#/components/schemas/CompletionRequest"
+    />
+  name: CompletionRequest
+- description: 'streamed completion response.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/CompletionResponseStreamChunk"
+    />'
+  name: CompletionResponseStreamChunk
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemCreateRequest"
+    />
+  name: AgenticSystemCreateRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemInstanceConfig"
+    />
+  name: AgenticSystemInstanceConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemToolDefinition"
+    />
+  name: AgenticSystemToolDefinition
+- description: <SchemaDefinition schemaRef="#/components/schemas/BuiltinShield" />
+  name: BuiltinShield
+- description: <SchemaDefinition schemaRef="#/components/schemas/OnViolationAction"
+    />
+  name: OnViolationAction
+- description: <SchemaDefinition schemaRef="#/components/schemas/RestAPIExecutionConfig"
+    />
+  name: RestAPIExecutionConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/RestAPIMethod" />
+  name: RestAPIMethod
+- description: <SchemaDefinition schemaRef="#/components/schemas/ShieldDefinition"
+    />
+  name: ShieldDefinition
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemCreateResponse"
+    />
+  name: AgenticSystemCreateResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemSessionCreateRequest"
+    />
+  name: AgenticSystemSessionCreateRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemSessionCreateResponse"
+    />
+  name: AgenticSystemSessionCreateResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemTurnCreateRequest"
+    />
+  name: AgenticSystemTurnCreateRequest
+- description: 'Server side event (SSE) stream of these events
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemTurnResponseStreamChunk"
+    />'
+  name: AgenticSystemTurnResponseStreamChunk
+- description: 'Request to create a dataset.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/CreateDatasetRequest" />'
+  name: CreateDatasetRequest
+- description: 'Dataset to be used for training or evaluating language models.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/TrainEvalDataset" />'
+  name: TrainEvalDataset
+- description: <SchemaDefinition schemaRef="#/components/schemas/TrainEvalDatasetColumnType"
+    />
+  name: TrainEvalDatasetColumnType
+- description: <SchemaDefinition schemaRef="#/components/schemas/InferenceStep" />
+  name: InferenceStep
+- description: <SchemaDefinition schemaRef="#/components/schemas/MemoryBankDocument"
+    />
+  name: MemoryBankDocument
+- description: <SchemaDefinition schemaRef="#/components/schemas/MemoryRetrievalStep"
+    />
+  name: MemoryRetrievalStep
+- description: 'A single session of an interaction with an Agentic System.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/Session" />'
+  name: Session
+- description: <SchemaDefinition schemaRef="#/components/schemas/ShieldCallStep" />
+  name: ShieldCallStep
+- description: <SchemaDefinition schemaRef="#/components/schemas/ShieldResponse" />
+  name: ShieldResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolExecutionStep"
+    />
+  name: ToolExecutionStep
+- description: <SchemaDefinition schemaRef="#/components/schemas/ToolResponse" />
+  name: ToolResponse
+- description: 'A single turn in an interaction with an Agentic System.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/Turn" />'
+  name: Turn
+- description: <SchemaDefinition schemaRef="#/components/schemas/AgenticSystemStepResponse"
+    />
+  name: AgenticSystemStepResponse
+- description: 'Artifacts of a evaluation job.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/EvaluationJobArtifactsResponse"
+    />'
+  name: EvaluationJobArtifactsResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/EvaluationJobLogStream"
+    />
+  name: EvaluationJobLogStream
+- description: <SchemaDefinition schemaRef="#/components/schemas/EvaluationJobStatusResponse"
+    />
+  name: EvaluationJobStatusResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/EvaluationJob" />
+  name: EvaluationJob
+- description: <SchemaDefinition schemaRef="#/components/schemas/MemoryBank" />
+  name: MemoryBank
+- description: 'Checkpoint created during training runs
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/Checkpoint" />'
+  name: Checkpoint
+- description: 'Artifacts of a finetuning job.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/PostTrainingJobArtifactsResponse"
+    />'
+  name: PostTrainingJobArtifactsResponse
+- description: 'Stream of logs from a finetuning job.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/PostTrainingJobLogStream" />'
+  name: PostTrainingJobLogStream
+- description: <SchemaDefinition schemaRef="#/components/schemas/PostTrainingJobStatus"
+    />
+  name: PostTrainingJobStatus
+- description: 'Status of a finetuning job.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/PostTrainingJobStatusResponse"
+    />'
+  name: PostTrainingJobStatusResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/PostTrainingJob"
+    />
+  name: PostTrainingJob
+- description: 'Request to evaluate question answering.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/EvaluateQuestionAnsweringRequest"
+    />'
+  name: EvaluateQuestionAnsweringRequest
+- description: 'Request to evaluate summarization.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/EvaluateSummarizationRequest"
+    />'
+  name: EvaluateSummarizationRequest
+- description: 'Request to evaluate text generation.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/EvaluateTextGenerationRequest"
+    />'
+  name: EvaluateTextGenerationRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/RewardModel" />
+  name: RewardModel
+- description: 'Request to generate synthetic data. A small batch of prompts and a
+    filtering function
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/SyntheticDataGenerationRequest"
+    />'
+  name: SyntheticDataGenerationRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/ScoredDialogGenerations"
+    />
+  name: ScoredDialogGenerations
+- description: <SchemaDefinition schemaRef="#/components/schemas/ScoredMessage" />
+  name: ScoredMessage
+- description: 'Response from the synthetic data generation. Batch of (prompt, response,
+    score) tuples that pass the threshold.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/SyntheticDataGenerationResponse"
+    />'
+  name: SyntheticDataGenerationResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/DPOAlignmentConfig"
+    />
+  name: DPOAlignmentConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/OptimizerConfig"
+    />
+  name: OptimizerConfig
+- description: 'Request to finetune a model.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/PostTrainingRLHFRequest" />'
+  name: PostTrainingRLHFRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/RLHFAlgorithm" />
+  name: RLHFAlgorithm
+- description: <SchemaDefinition schemaRef="#/components/schemas/TrainingConfig" />
+  name: TrainingConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/DialogGenerations"
+    />
+  name: DialogGenerations
+- description: 'Request to score a reward function. A list of prompts and a list of
+    responses per prompt.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/RewardScoringRequest" />'
+  name: RewardScoringRequest
+- description: 'Response from the reward scoring. Batch of (prompt, response, score)
+    tuples that pass the threshold.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/RewardScoringResponse" />'
+  name: RewardScoringResponse
+- description: <SchemaDefinition schemaRef="#/components/schemas/DoraFinetuningConfig"
+    />
+  name: DoraFinetuningConfig
+- description: <SchemaDefinition schemaRef="#/components/schemas/FinetuningAlgorithm"
+    />
+  name: FinetuningAlgorithm
+- description: <SchemaDefinition schemaRef="#/components/schemas/LoraFinetuningConfig"
+    />
+  name: LoraFinetuningConfig
+- description: 'Request to finetune a model.
+
+
+    <SchemaDefinition schemaRef="#/components/schemas/PostTrainingSFTRequest" />'
+  name: PostTrainingSFTRequest
+- description: <SchemaDefinition schemaRef="#/components/schemas/QLoraFinetuningConfig"
+    />
+  name: QLoraFinetuningConfig
+x-tagGroups:
+- name: Operations
+  tags:
+  - AgenticSystem
+  - Datasets
+  - Evaluations
+  - Inference
+  - MemoryBanks
+  - PostTraining
+  - RewardScoring
+  - SyntheticDataGeneration
+- name: Types
+  tags:
+  - AgenticSystemCreateRequest
+  - AgenticSystemCreateResponse
+  - AgenticSystemInstanceConfig
+  - AgenticSystemSessionCreateRequest
+  - AgenticSystemSessionCreateResponse
+  - AgenticSystemStepResponse
+  - AgenticSystemToolDefinition
+  - AgenticSystemTurnCreateRequest
+  - AgenticSystemTurnResponseStreamChunk
+  - Attachment
+  - BatchChatCompletionRequest
+  - BatchChatCompletionResponse
+  - BatchCompletionRequest
+  - BatchCompletionResponse
+  - Bf16QuantizationConfig
+  - BuiltinShield
+  - BuiltinTool
+  - ChatCompletionRequest
+  - ChatCompletionResponseEvent
+  - ChatCompletionResponseEventType
+  - ChatCompletionResponseStreamChunk
+  - Checkpoint
+  - CompletionMessage
+  - CompletionRequest
+  - CompletionResponseStreamChunk
+  - CreateDatasetRequest
+  - DPOAlignmentConfig
+  - DialogGenerations
+  - DoraFinetuningConfig
+  - EvaluateQuestionAnsweringRequest
+  - EvaluateSummarizationRequest
+  - EvaluateTextGenerationRequest
+  - EvaluationJob
+  - EvaluationJobArtifactsResponse
+  - EvaluationJobLogStream
+  - EvaluationJobStatusResponse
+  - FinetuningAlgorithm
+  - Fp8QuantizationConfig
+  - InferenceStep
+  - InstructModel
+  - LoraFinetuningConfig
+  - MemoryBank
+  - MemoryBankDocument
+  - MemoryRetrievalStep
+  - OnViolationAction
+  - OptimizerConfig
+  - PostTrainingJob
+  - PostTrainingJobArtifactsResponse
+  - PostTrainingJobLogStream
+  - PostTrainingJobStatus
+  - PostTrainingJobStatusResponse
+  - PostTrainingRLHFRequest
+  - PostTrainingSFTRequest
+  - PretrainedModel
+  - QLoraFinetuningConfig
+  - RLHFAlgorithm
+  - RestAPIExecutionConfig
+  - RestAPIMethod
+  - RewardModel
+  - RewardScoringRequest
+  - RewardScoringResponse
+  - SamplingParams
+  - SamplingStrategy
+  - ScoredDialogGenerations
+  - ScoredMessage
+  - Session
+  - ShieldCallStep
+  - ShieldDefinition
+  - ShieldResponse
+  - StopReason
+  - SyntheticDataGenerationRequest
+  - SyntheticDataGenerationResponse
+  - SystemMessage
+  - TokenLogProbs
+  - ToolCall
+  - ToolCallDelta
+  - ToolCallParseStatus
+  - ToolDefinition
+  - ToolExecutionStep
+  - ToolParamDefinition
+  - ToolResponse
+  - ToolResponseMessage
+  - TrainEvalDataset
+  - TrainEvalDatasetColumnType
+  - TrainingConfig
+  - Turn
+  - URL
+  - UserMessage

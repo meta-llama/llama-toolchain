@@ -1,0 +1,4377 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenAPI specification</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+    <script defer="defer" src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+    <script defer="defer">
+        document.addEventListener("DOMContentLoaded", function () {
+            spec = {
+    "openapi": "3.1.0",
+    "info": {
+        "title": "[DRAFT] Llama Stack Specification",
+        "version": "0.0.1",
+        "description": "This is the specification of the llama stack that provides\n                a set of endpoints and their corresponding interfaces that are tailored to\n                best leverage Llama Models. The specification is still in draft and subject to change.\n                Generated at 2024-07-23 02:02:16.069876"
+    },
+    "servers": [
+        {
+            "url": "http://any-hosted-llama-stack.com"
+        }
+    ],
+    "paths": {
+        "/agentic_system/memory_bank/attach": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/inference/batch_chat_completion": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BatchChatCompletionResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Inference"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BatchChatCompletionRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/inference/batch_completion": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BatchCompletionResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Inference"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BatchCompletionRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/evaluate/job/cancel": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/post_training/job/cancel": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/inference/chat_completion": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "SSE-stream of these events.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ChatCompletionResponseStreamChunk"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Inference"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChatCompletionRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/inference/completion": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "streamed completion response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompletionResponseStreamChunk"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Inference"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CompletionRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/create": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AgenticSystemCreateResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AgenticSystemCreateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/session/create": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AgenticSystemSessionCreateResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AgenticSystemSessionCreateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/turn/create": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AgenticSystemTurnResponseStreamChunk"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AgenticSystemTurnCreateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/datasets/create": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "Datasets"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDatasetRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/delete": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/agentic_system/session/delete": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/datasets/delete": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "Datasets"
+                ],
+                "parameters": [
+                    {
+                        "name": "dataset_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/memory_banks/drop": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/memory_bank/delete": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/jsonl": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/memory_bank/detach": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/session/get": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Session"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/agentic_system/step/get": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AgenticSystemStepResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "turn_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "step_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/agentic_system/turn/get": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Turn"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "AgenticSystem"
+                ],
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "turn_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/datasets/get": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainEvalDataset"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Datasets"
+                ],
+                "parameters": [
+                    {
+                        "name": "dataset_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/evaluate/job/artifacts": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJobArtifactsResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/evaluate/job/logs": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJobLogStream"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/evaluate/job/status": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJobStatusResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/evaluate/jobs": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/jsonl": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": []
+            }
+        },
+        "/memory_banks/get": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/jsonl": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemoryBank"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/memory_banks/list": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/jsonl": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemoryBank"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": []
+            }
+        },
+        "/memory_bank/get": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/jsonl": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemoryBankDocument"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/post_training/job/artifacts": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostTrainingJobArtifactsResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/post_training/job/logs": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostTrainingJobLogStream"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/post_training/job/status": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostTrainingJobStatusResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": [
+                    {
+                        "name": "job_uuid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/post_training/jobs": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/jsonl": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostTrainingJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": []
+            }
+        },
+        "/memory_banks/create": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bank_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/MemoryBankDocument"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/evaluate/question_answering/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EvaluateQuestionAnsweringRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/evaluate/summarization/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EvaluateSummarizationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/evaluate/text_generation/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Evaluations"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EvaluateTextGenerationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/synthetic_data_generation/generate": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SyntheticDataGenerationResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "SyntheticDataGeneration"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SyntheticDataGenerationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/memory_bank/insert": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/MemoryBankDocument"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/post_training/preference_optimize": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostTrainingJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostTrainingRLHFRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/reward_scoring/score": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RewardScoringResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "RewardScoring"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RewardScoringRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/post_training/supervised_fine_tune": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostTrainingJob"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "PostTraining"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostTrainingSFTRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/memory_bank/update": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "MemoryBanks"
+                ],
+                "parameters": [
+                    {
+                        "name": "bank_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/MemoryBankDocument"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        }
+    },
+    "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "components": {
+        "schemas": {
+            "Attachment": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "$ref": "#/components/schemas/URL"
+                    },
+                    "mime_type": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "url",
+                    "mime_type"
+                ]
+            },
+            "BatchChatCompletionRequest": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "$ref": "#/components/schemas/InstructModel"
+                    },
+                    "messages_batch": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/components/schemas/UserMessage"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/SystemMessage"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/ToolResponseMessage"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/CompletionMessage"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "available_tools": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ToolDefinition"
+                        }
+                    },
+                    "logprobs": {
+                        "type": "object",
+                        "properties": {
+                            "top_k": {
+                                "type": "integer"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "quantization_config": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Bf16QuantizationConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Fp8QuantizationConfig"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "model",
+                    "messages_batch"
+                ]
+            },
+            "Bf16QuantizationConfig": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "const": "bf16"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "type"
+                ]
+            },
+            "BuiltinTool": {
+                "type": "string",
+                "enum": [
+                    "brave_search",
+                    "wolfram_alpha",
+                    "photogen",
+                    "code_interpreter"
+                ]
+            },
+            "CompletionMessage": {
+                "type": "object",
+                "properties": {
+                    "role": {
+                        "type": "string",
+                        "const": "assistant"
+                    },
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Attachment"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/Attachment"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "stop_reason": {
+                        "$ref": "#/components/schemas/StopReason"
+                    },
+                    "tool_calls": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ToolCall"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "role",
+                    "content",
+                    "stop_reason",
+                    "tool_calls"
+                ]
+            },
+            "Fp8QuantizationConfig": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "const": "fp8"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "type"
+                ]
+            },
+            "InstructModel": {
+                "type": "string",
+                "enum": [
+                    "llama3_8b_chat",
+                    "llama3_70b_chat"
+                ]
+            },
+            "SamplingParams": {
+                "type": "object",
+                "properties": {
+                    "strategy": {
+                        "$ref": "#/components/schemas/SamplingStrategy"
+                    },
+                    "temperature": {
+                        "type": "number"
+                    },
+                    "top_p": {
+                        "type": "number"
+                    },
+                    "top_k": {
+                        "type": "integer"
+                    },
+                    "max_tokens": {
+                        "type": "integer"
+                    },
+                    "repetition_penalty": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "strategy"
+                ]
+            },
+            "SamplingStrategy": {
+                "type": "string",
+                "enum": [
+                    "greedy",
+                    "top_p",
+                    "top_k"
+                ]
+            },
+            "StopReason": {
+                "type": "string",
+                "enum": [
+                    "end_of_turn",
+                    "end_of_message",
+                    "out_of_tokens"
+                ]
+            },
+            "SystemMessage": {
+                "type": "object",
+                "properties": {
+                    "role": {
+                        "type": "string",
+                        "const": "system"
+                    },
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Attachment"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/Attachment"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "role",
+                    "content"
+                ]
+            },
+            "ToolCall": {
+                "type": "object",
+                "properties": {
+                    "call_id": {
+                        "type": "string"
+                    },
+                    "tool_name": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinTool"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "arguments": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "boolean"
+                                            },
+                                            {
+                                                "type": "null"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "boolean"
+                                            },
+                                            {
+                                                "type": "null"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "call_id",
+                    "tool_name",
+                    "arguments"
+                ]
+            },
+            "ToolDefinition": {
+                "type": "object",
+                "properties": {
+                    "tool_name": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinTool"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ToolParamDefinition"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "tool_name"
+                ]
+            },
+            "ToolParamDefinition": {
+                "type": "object",
+                "properties": {
+                    "param_type": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "required": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "param_type"
+                ]
+            },
+            "ToolResponseMessage": {
+                "type": "object",
+                "properties": {
+                    "role": {
+                        "type": "string",
+                        "const": "ipython"
+                    },
+                    "call_id": {
+                        "type": "string"
+                    },
+                    "tool_name": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinTool"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Attachment"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/Attachment"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "role",
+                    "call_id",
+                    "tool_name",
+                    "content"
+                ]
+            },
+            "URL": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^(https?://|file://|data:)"
+            },
+            "UserMessage": {
+                "type": "object",
+                "properties": {
+                    "role": {
+                        "type": "string",
+                        "const": "user"
+                    },
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Attachment"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/Attachment"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "role",
+                    "content"
+                ]
+            },
+            "BatchChatCompletionResponse": {
+                "type": "object",
+                "properties": {
+                    "completion_message_batch": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CompletionMessage"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "completion_message_batch"
+                ]
+            },
+            "BatchCompletionRequest": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "$ref": "#/components/schemas/PretrainedModel"
+                    },
+                    "content_batch": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/Attachment"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "$ref": "#/components/schemas/Attachment"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "logprobs": {
+                        "type": "object",
+                        "properties": {
+                            "top_k": {
+                                "type": "integer"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "quantization_config": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Bf16QuantizationConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Fp8QuantizationConfig"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "model",
+                    "content_batch"
+                ]
+            },
+            "PretrainedModel": {
+                "description": "The type of the model. This is used to determine the model family and SKU."
+            },
+            "BatchCompletionResponse": {
+                "type": "object",
+                "properties": {
+                    "completion_message_batch": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CompletionMessage"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "completion_message_batch"
+                ]
+            },
+            "ChatCompletionRequest": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "$ref": "#/components/schemas/InstructModel"
+                    },
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/SystemMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/CompletionMessage"
+                                }
+                            ]
+                        }
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "available_tools": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ToolDefinition"
+                        }
+                    },
+                    "stream": {
+                        "type": "boolean"
+                    },
+                    "logprobs": {
+                        "type": "object",
+                        "properties": {
+                            "top_k": {
+                                "type": "integer"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "quantization_config": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Bf16QuantizationConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Fp8QuantizationConfig"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "model",
+                    "messages"
+                ]
+            },
+            "ChatCompletionResponseEvent": {
+                "type": "object",
+                "properties": {
+                    "event_type": {
+                        "$ref": "#/components/schemas/ChatCompletionResponseEventType"
+                    },
+                    "delta": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/ToolCallDelta"
+                            }
+                        ]
+                    },
+                    "logprobs": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TokenLogProbs"
+                        }
+                    },
+                    "stop_reason": {
+                        "$ref": "#/components/schemas/StopReason"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "event_type",
+                    "delta"
+                ],
+                "title": "Chat completion response event."
+            },
+            "ChatCompletionResponseEventType": {
+                "type": "string",
+                "enum": [
+                    "start",
+                    "complete",
+                    "progress"
+                ]
+            },
+            "ChatCompletionResponseStreamChunk": {
+                "type": "object",
+                "properties": {
+                    "event": {
+                        "$ref": "#/components/schemas/ChatCompletionResponseEvent"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "event"
+                ],
+                "title": "SSE-stream of these events."
+            },
+            "TokenLogProbs": {
+                "type": "object",
+                "properties": {
+                    "logprobs_by_token": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "logprobs_by_token"
+                ]
+            },
+            "ToolCallDelta": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/ToolCall"
+                            }
+                        ]
+                    },
+                    "parse_status": {
+                        "$ref": "#/components/schemas/ToolCallParseStatus"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "content",
+                    "parse_status"
+                ]
+            },
+            "ToolCallParseStatus": {
+                "type": "string",
+                "enum": [
+                    "started",
+                    "in_progress",
+                    "failure",
+                    "success"
+                ]
+            },
+            "CompletionRequest": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "$ref": "#/components/schemas/PretrainedModel"
+                    },
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Attachment"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/Attachment"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "stream": {
+                        "type": "boolean"
+                    },
+                    "logprobs": {
+                        "type": "object",
+                        "properties": {
+                            "top_k": {
+                                "type": "integer"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "quantization_config": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Bf16QuantizationConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Fp8QuantizationConfig"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "model",
+                    "content"
+                ]
+            },
+            "CompletionResponseStreamChunk": {
+                "type": "object",
+                "properties": {
+                    "delta": {
+                        "type": "string"
+                    },
+                    "stop_reason": {
+                        "$ref": "#/components/schemas/StopReason"
+                    },
+                    "logprobs": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TokenLogProbs"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "delta"
+                ],
+                "title": "streamed completion response."
+            },
+            "AgenticSystemCreateRequest": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "$ref": "#/components/schemas/InstructModel"
+                    },
+                    "instance_config": {
+                        "$ref": "#/components/schemas/AgenticSystemInstanceConfig"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "model",
+                    "instance_config"
+                ]
+            },
+            "AgenticSystemInstanceConfig": {
+                "type": "object",
+                "properties": {
+                    "instructions": {
+                        "type": "string"
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "available_tools": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AgenticSystemToolDefinition"
+                        }
+                    },
+                    "input_shields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShieldDefinition"
+                        }
+                    },
+                    "output_shields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShieldDefinition"
+                        }
+                    },
+                    "quantization_config": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Bf16QuantizationConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Fp8QuantizationConfig"
+                            }
+                        ]
+                    },
+                    "debug_prefix_messages": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/SystemMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/CompletionMessage"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "instructions"
+                ]
+            },
+            "AgenticSystemToolDefinition": {
+                "type": "object",
+                "properties": {
+                    "tool_name": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinTool"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ToolParamDefinition"
+                        }
+                    },
+                    "execution_config": {
+                        "$ref": "#/components/schemas/RestAPIExecutionConfig"
+                    },
+                    "input_shields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShieldDefinition"
+                        }
+                    },
+                    "output_shields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShieldDefinition"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "tool_name"
+                ]
+            },
+            "BuiltinShield": {
+                "type": "string",
+                "enum": [
+                    "llama_guard",
+                    "code_scanner_guard",
+                    "third_party_shield",
+                    "injection_shield",
+                    "jailbreak_shield"
+                ]
+            },
+            "OnViolationAction": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2
+                ]
+            },
+            "RestAPIExecutionConfig": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "$ref": "#/components/schemas/URL"
+                    },
+                    "method": {
+                        "$ref": "#/components/schemas/RestAPIMethod"
+                    },
+                    "params": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "headers": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "body": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "url",
+                    "method"
+                ]
+            },
+            "RestAPIMethod": {
+                "type": "string",
+                "enum": [
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "DELETE"
+                ]
+            },
+            "ShieldDefinition": {
+                "type": "object",
+                "properties": {
+                    "shield_type": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinShield"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ToolParamDefinition"
+                        }
+                    },
+                    "on_violation_action": {
+                        "$ref": "#/components/schemas/OnViolationAction"
+                    },
+                    "execution_config": {
+                        "$ref": "#/components/schemas/RestAPIExecutionConfig"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "shield_type",
+                    "on_violation_action"
+                ]
+            },
+            "AgenticSystemCreateResponse": {
+                "type": "object",
+                "properties": {
+                    "system_id": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "system_id"
+                ]
+            },
+            "AgenticSystemSessionCreateRequest": {
+                "type": "object",
+                "properties": {
+                    "system_id": {
+                        "type": "string"
+                    },
+                    "session_name": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "system_id",
+                    "session_name"
+                ]
+            },
+            "AgenticSystemSessionCreateResponse": {
+                "type": "object",
+                "properties": {
+                    "session_id": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "session_id"
+                ]
+            },
+            "AgenticSystemTurnCreateRequest": {
+                "type": "object",
+                "properties": {
+                    "system_id": {
+                        "type": "string"
+                    },
+                    "session_id": {
+                        "type": "string"
+                    },
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                }
+                            ]
+                        }
+                    },
+                    "stream": {
+                        "type": "boolean"
+                    },
+                    "override_config": {
+                        "$ref": "#/components/schemas/AgenticSystemInstanceConfig"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "system_id",
+                    "session_id",
+                    "messages"
+                ]
+            },
+            "AgenticSystemTurnResponseStreamChunk": {
+                "description": "Server side event (SSE) stream of these events"
+            },
+            "CreateDatasetRequest": {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "uuid",
+                    "dataset"
+                ],
+                "title": "Request to create a dataset."
+            },
+            "TrainEvalDataset": {
+                "type": "object",
+                "properties": {
+                    "columns": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/TrainEvalDatasetColumnType"
+                        }
+                    },
+                    "content_url": {
+                        "$ref": "#/components/schemas/URL"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "columns",
+                    "content_url"
+                ],
+                "title": "Dataset to be used for training or evaluating language models."
+            },
+            "TrainEvalDatasetColumnType": {
+                "type": "string",
+                "enum": [
+                    "dialog",
+                    "text",
+                    "media",
+                    "number",
+                    "json"
+                ]
+            },
+            "InferenceStep": {
+                "type": "object",
+                "properties": {
+                    "turn_id": {
+                        "type": "string"
+                    },
+                    "step_id": {
+                        "type": "string"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "step_type": {
+                        "type": "string",
+                        "const": "inference"
+                    },
+                    "model_response": {
+                        "$ref": "#/components/schemas/CompletionMessage"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "turn_id",
+                    "step_id",
+                    "step_type",
+                    "model_response"
+                ]
+            },
+            "MemoryBankDocument": {
+                "type": "object",
+                "properties": {
+                    "document_id": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string",
+                        "contentEncoding": "base64"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    },
+                    "mime_type": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "document_id",
+                    "content",
+                    "metadata",
+                    "mime_type"
+                ]
+            },
+            "MemoryRetrievalStep": {
+                "type": "object",
+                "properties": {
+                    "turn_id": {
+                        "type": "string"
+                    },
+                    "step_id": {
+                        "type": "string"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "step_type": {
+                        "type": "string",
+                        "const": "memory_retrieval"
+                    },
+                    "memory_bank_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "documents": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MemoryBankDocument"
+                        }
+                    },
+                    "scores": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "turn_id",
+                    "step_id",
+                    "step_type",
+                    "memory_bank_ids",
+                    "documents",
+                    "scores"
+                ]
+            },
+            "Session": {
+                "type": "object",
+                "properties": {
+                    "session_id": {
+                        "type": "string"
+                    },
+                    "session_name": {
+                        "type": "string"
+                    },
+                    "turns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Turn"
+                        }
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "session_id",
+                    "session_name",
+                    "turns",
+                    "started_at"
+                ],
+                "title": "A single session of an interaction with an Agentic System."
+            },
+            "ShieldCallStep": {
+                "type": "object",
+                "properties": {
+                    "turn_id": {
+                        "type": "string"
+                    },
+                    "step_id": {
+                        "type": "string"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "step_type": {
+                        "type": "string",
+                        "const": "shield_call"
+                    },
+                    "response": {
+                        "$ref": "#/components/schemas/ShieldResponse"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "turn_id",
+                    "step_id",
+                    "step_type",
+                    "response"
+                ]
+            },
+            "ShieldResponse": {
+                "type": "object",
+                "properties": {
+                    "shield_type": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinShield"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "is_violation": {
+                        "type": "boolean"
+                    },
+                    "violation_type": {
+                        "type": "string"
+                    },
+                    "violation_return_message": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "shield_type",
+                    "is_violation"
+                ]
+            },
+            "ToolExecutionStep": {
+                "type": "object",
+                "properties": {
+                    "turn_id": {
+                        "type": "string"
+                    },
+                    "step_id": {
+                        "type": "string"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "step_type": {
+                        "type": "string",
+                        "const": "tool_execution"
+                    },
+                    "tool_calls": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ToolCall"
+                        }
+                    },
+                    "tool_responses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ToolResponse"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "turn_id",
+                    "step_id",
+                    "step_type",
+                    "tool_calls",
+                    "tool_responses"
+                ]
+            },
+            "ToolResponse": {
+                "type": "object",
+                "properties": {
+                    "call_id": {
+                        "type": "string"
+                    },
+                    "tool_name": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BuiltinTool"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "content": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Attachment"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/Attachment"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "call_id",
+                    "tool_name",
+                    "content"
+                ]
+            },
+            "Turn": {
+                "type": "object",
+                "properties": {
+                    "turn_id": {
+                        "type": "string"
+                    },
+                    "session_id": {
+                        "type": "string"
+                    },
+                    "input_messages": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                }
+                            ]
+                        }
+                    },
+                    "steps": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/InferenceStep"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolExecutionStep"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ShieldCallStep"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/MemoryRetrievalStep"
+                                }
+                            ]
+                        }
+                    },
+                    "output_message": {
+                        "$ref": "#/components/schemas/CompletionMessage"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "turn_id",
+                    "session_id",
+                    "input_messages",
+                    "steps",
+                    "output_message",
+                    "started_at"
+                ],
+                "title": "A single turn in an interaction with an Agentic System."
+            },
+            "AgenticSystemStepResponse": {
+                "type": "object",
+                "properties": {
+                    "step": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/InferenceStep"
+                            },
+                            {
+                                "$ref": "#/components/schemas/ToolExecutionStep"
+                            },
+                            {
+                                "$ref": "#/components/schemas/ShieldCallStep"
+                            },
+                            {
+                                "$ref": "#/components/schemas/MemoryRetrievalStep"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "step"
+                ]
+            },
+            "EvaluationJobArtifactsResponse": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid"
+                ],
+                "title": "Artifacts of a evaluation job."
+            },
+            "EvaluationJobLogStream": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid"
+                ]
+            },
+            "EvaluationJobStatusResponse": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid"
+                ]
+            },
+            "EvaluationJob": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid"
+                ]
+            },
+            "MemoryBank": {
+                "type": "object",
+                "properties": {
+                    "memory_bank_id": {
+                        "type": "string"
+                    },
+                    "memory_bank_name": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "memory_bank_id",
+                    "memory_bank_name"
+                ]
+            },
+            "Checkpoint": {
+                "description": "Checkpoint created during training runs"
+            },
+            "PostTrainingJobArtifactsResponse": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "checkpoints": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Checkpoint"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "checkpoints"
+                ],
+                "title": "Artifacts of a finetuning job."
+            },
+            "PostTrainingJobLogStream": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "log_lines": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "log_lines"
+                ],
+                "title": "Stream of logs from a finetuning job."
+            },
+            "PostTrainingJobStatus": {
+                "type": "string",
+                "enum": [
+                    "running",
+                    "completed",
+                    "failed",
+                    "scheduled"
+                ]
+            },
+            "PostTrainingJobStatusResponse": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/PostTrainingJobStatus"
+                    },
+                    "scheduled_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "resources_allocated": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    },
+                    "checkpoints": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Checkpoint"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "status",
+                    "checkpoints"
+                ],
+                "title": "Status of a finetuning job."
+            },
+            "PostTrainingJob": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid"
+                ]
+            },
+            "EvaluateQuestionAnsweringRequest": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "checkpoint": {
+                        "$ref": "#/components/schemas/Checkpoint"
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "em",
+                                "f1"
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "dataset",
+                    "checkpoint",
+                    "sampling_params",
+                    "metrics"
+                ],
+                "title": "Request to evaluate question answering."
+            },
+            "EvaluateSummarizationRequest": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "checkpoint": {
+                        "$ref": "#/components/schemas/Checkpoint"
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "rouge",
+                                "bleu"
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "dataset",
+                    "checkpoint",
+                    "sampling_params",
+                    "metrics"
+                ],
+                "title": "Request to evaluate summarization."
+            },
+            "EvaluateTextGenerationRequest": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "checkpoint": {
+                        "$ref": "#/components/schemas/Checkpoint"
+                    },
+                    "sampling_params": {
+                        "$ref": "#/components/schemas/SamplingParams"
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "perplexity",
+                                "rouge",
+                                "bleu"
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "dataset",
+                    "checkpoint",
+                    "sampling_params",
+                    "metrics"
+                ],
+                "title": "Request to evaluate text generation."
+            },
+            "RewardModel": {
+                "type": "string",
+                "enum": [
+                    "llama3_70b_reward",
+                    "llama3_405b_reward"
+                ]
+            },
+            "SyntheticDataGenerationRequest": {
+                "type": "object",
+                "properties": {
+                    "dialogs": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/SystemMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/CompletionMessage"
+                                }
+                            ]
+                        }
+                    },
+                    "filtering_function": {
+                        "type": "string",
+                        "enum": [
+                            "none",
+                            "random",
+                            "top_k",
+                            "top_p",
+                            "top_k_top_p",
+                            "sigmoid"
+                        ],
+                        "title": "The type of filtering function."
+                    },
+                    "model": {
+                        "$ref": "#/components/schemas/RewardModel"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "dialogs",
+                    "filtering_function"
+                ],
+                "title": "Request to generate synthetic data. A small batch of prompts and a filtering function"
+            },
+            "ScoredDialogGenerations": {
+                "type": "object",
+                "properties": {
+                    "dialog": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/SystemMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/CompletionMessage"
+                                }
+                            ]
+                        }
+                    },
+                    "scored_generations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ScoredMessage"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "dialog",
+                    "scored_generations"
+                ]
+            },
+            "ScoredMessage": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/UserMessage"
+                            },
+                            {
+                                "$ref": "#/components/schemas/SystemMessage"
+                            },
+                            {
+                                "$ref": "#/components/schemas/ToolResponseMessage"
+                            },
+                            {
+                                "$ref": "#/components/schemas/CompletionMessage"
+                            }
+                        ]
+                    },
+                    "score": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "message",
+                    "score"
+                ]
+            },
+            "SyntheticDataGenerationResponse": {
+                "type": "object",
+                "properties": {
+                    "synthetic_data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ScoredDialogGenerations"
+                        }
+                    },
+                    "statistics": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "synthetic_data"
+                ],
+                "title": "Response from the synthetic data generation. Batch of (prompt, response, score) tuples that pass the threshold."
+            },
+            "DPOAlignmentConfig": {
+                "type": "object",
+                "properties": {
+                    "reward_scale": {
+                        "type": "number"
+                    },
+                    "reward_clip": {
+                        "type": "number"
+                    },
+                    "epsilon": {
+                        "type": "number"
+                    },
+                    "gamma": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "reward_scale",
+                    "reward_clip",
+                    "epsilon",
+                    "gamma"
+                ]
+            },
+            "OptimizerConfig": {
+                "type": "object",
+                "properties": {
+                    "optimizer_type": {
+                        "type": "string",
+                        "enum": [
+                            "adam",
+                            "adamw",
+                            "sgd"
+                        ]
+                    },
+                    "lr": {
+                        "type": "number"
+                    },
+                    "lr_min": {
+                        "type": "number"
+                    },
+                    "weight_decay": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "optimizer_type",
+                    "lr",
+                    "lr_min",
+                    "weight_decay"
+                ]
+            },
+            "PostTrainingRLHFRequest": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "finetuned_model": {
+                        "$ref": "#/components/schemas/URL"
+                    },
+                    "dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "validation_dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "algorithm": {
+                        "$ref": "#/components/schemas/RLHFAlgorithm"
+                    },
+                    "algorithm_config": {
+                        "$ref": "#/components/schemas/DPOAlignmentConfig"
+                    },
+                    "optimizer_config": {
+                        "$ref": "#/components/schemas/OptimizerConfig"
+                    },
+                    "training_config": {
+                        "$ref": "#/components/schemas/TrainingConfig"
+                    },
+                    "hyperparam_search_config": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    },
+                    "logger_config": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "finetuned_model",
+                    "dataset",
+                    "validation_dataset",
+                    "algorithm",
+                    "algorithm_config",
+                    "optimizer_config",
+                    "training_config",
+                    "hyperparam_search_config",
+                    "logger_config"
+                ],
+                "title": "Request to finetune a model."
+            },
+            "RLHFAlgorithm": {
+                "type": "string",
+                "enum": [
+                    "dpo"
+                ]
+            },
+            "TrainingConfig": {
+                "type": "object",
+                "properties": {
+                    "n_epochs": {
+                        "type": "integer"
+                    },
+                    "batch_size": {
+                        "type": "integer"
+                    },
+                    "shuffle": {
+                        "type": "boolean"
+                    },
+                    "n_iters": {
+                        "type": "integer"
+                    },
+                    "enable_activation_checkpointing": {
+                        "type": "boolean"
+                    },
+                    "memory_efficient_fsdp_wrap": {
+                        "type": "boolean"
+                    },
+                    "fsdp_cpu_offload": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "n_epochs",
+                    "batch_size",
+                    "shuffle",
+                    "n_iters",
+                    "enable_activation_checkpointing",
+                    "memory_efficient_fsdp_wrap",
+                    "fsdp_cpu_offload"
+                ]
+            },
+            "DialogGenerations": {
+                "type": "object",
+                "properties": {
+                    "dialog": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/SystemMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/CompletionMessage"
+                                }
+                            ]
+                        }
+                    },
+                    "sampled_generations": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/SystemMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/ToolResponseMessage"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/CompletionMessage"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "dialog",
+                    "sampled_generations"
+                ]
+            },
+            "RewardScoringRequest": {
+                "type": "object",
+                "properties": {
+                    "dialog_generations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DialogGenerations"
+                        }
+                    },
+                    "model": {
+                        "$ref": "#/components/schemas/RewardModel"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "dialog_generations",
+                    "model"
+                ],
+                "title": "Request to score a reward function. A list of prompts and a list of responses per prompt."
+            },
+            "RewardScoringResponse": {
+                "type": "object",
+                "properties": {
+                    "scored_generations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ScoredDialogGenerations"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "scored_generations"
+                ],
+                "title": "Response from the reward scoring. Batch of (prompt, response, score) tuples that pass the threshold."
+            },
+            "DoraFinetuningConfig": {
+                "type": "object",
+                "properties": {
+                    "lora_attn_modules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "apply_lora_to_mlp": {
+                        "type": "boolean"
+                    },
+                    "apply_lora_to_output": {
+                        "type": "boolean"
+                    },
+                    "rank": {
+                        "type": "integer"
+                    },
+                    "alpha": {
+                        "type": "integer"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "lora_attn_modules",
+                    "apply_lora_to_mlp",
+                    "apply_lora_to_output",
+                    "rank",
+                    "alpha"
+                ]
+            },
+            "FinetuningAlgorithm": {
+                "type": "string",
+                "enum": [
+                    "full",
+                    "lora",
+                    "qlora",
+                    "dora"
+                ]
+            },
+            "LoraFinetuningConfig": {
+                "type": "object",
+                "properties": {
+                    "lora_attn_modules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "apply_lora_to_mlp": {
+                        "type": "boolean"
+                    },
+                    "apply_lora_to_output": {
+                        "type": "boolean"
+                    },
+                    "rank": {
+                        "type": "integer"
+                    },
+                    "alpha": {
+                        "type": "integer"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "lora_attn_modules",
+                    "apply_lora_to_mlp",
+                    "apply_lora_to_output",
+                    "rank",
+                    "alpha"
+                ]
+            },
+            "PostTrainingSFTRequest": {
+                "type": "object",
+                "properties": {
+                    "job_uuid": {
+                        "type": "string"
+                    },
+                    "model": {
+                        "$ref": "#/components/schemas/PretrainedModel"
+                    },
+                    "dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "validation_dataset": {
+                        "$ref": "#/components/schemas/TrainEvalDataset"
+                    },
+                    "algorithm": {
+                        "$ref": "#/components/schemas/FinetuningAlgorithm"
+                    },
+                    "algorithm_config": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/LoraFinetuningConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/QLoraFinetuningConfig"
+                            },
+                            {
+                                "$ref": "#/components/schemas/DoraFinetuningConfig"
+                            }
+                        ]
+                    },
+                    "optimizer_config": {
+                        "$ref": "#/components/schemas/OptimizerConfig"
+                    },
+                    "training_config": {
+                        "$ref": "#/components/schemas/TrainingConfig"
+                    },
+                    "hyperparam_search_config": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    },
+                    "logger_config": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "object"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "job_uuid",
+                    "model",
+                    "dataset",
+                    "validation_dataset",
+                    "algorithm",
+                    "algorithm_config",
+                    "optimizer_config",
+                    "training_config",
+                    "hyperparam_search_config",
+                    "logger_config"
+                ],
+                "title": "Request to finetune a model."
+            },
+            "QLoraFinetuningConfig": {
+                "type": "object",
+                "properties": {
+                    "lora_attn_modules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "apply_lora_to_mlp": {
+                        "type": "boolean"
+                    },
+                    "apply_lora_to_output": {
+                        "type": "boolean"
+                    },
+                    "rank": {
+                        "type": "integer"
+                    },
+                    "alpha": {
+                        "type": "integer"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "lora_attn_modules",
+                    "apply_lora_to_mlp",
+                    "apply_lora_to_output",
+                    "rank",
+                    "alpha"
+                ]
+            }
+        },
+        "responses": {}
+    },
+    "security": [
+        {
+            "Default": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "PostTraining"
+        },
+        {
+            "name": "MemoryBanks"
+        },
+        {
+            "name": "RewardScoring"
+        },
+        {
+            "name": "Datasets"
+        },
+        {
+            "name": "Evaluations"
+        },
+        {
+            "name": "AgenticSystem"
+        },
+        {
+            "name": "Inference"
+        },
+        {
+            "name": "SyntheticDataGeneration"
+        },
+        {
+            "name": "Attachment",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/Attachment\" />"
+        },
+        {
+            "name": "BatchChatCompletionRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BatchChatCompletionRequest\" />"
+        },
+        {
+            "name": "Bf16QuantizationConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/Bf16QuantizationConfig\" />"
+        },
+        {
+            "name": "BuiltinTool",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BuiltinTool\" />"
+        },
+        {
+            "name": "CompletionMessage",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/CompletionMessage\" />"
+        },
+        {
+            "name": "Fp8QuantizationConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/Fp8QuantizationConfig\" />"
+        },
+        {
+            "name": "InstructModel",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/InstructModel\" />"
+        },
+        {
+            "name": "SamplingParams",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/SamplingParams\" />"
+        },
+        {
+            "name": "SamplingStrategy",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/SamplingStrategy\" />"
+        },
+        {
+            "name": "StopReason",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/StopReason\" />"
+        },
+        {
+            "name": "SystemMessage",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/SystemMessage\" />"
+        },
+        {
+            "name": "ToolCall",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolCall\" />"
+        },
+        {
+            "name": "ToolDefinition",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolDefinition\" />"
+        },
+        {
+            "name": "ToolParamDefinition",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolParamDefinition\" />"
+        },
+        {
+            "name": "ToolResponseMessage",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolResponseMessage\" />"
+        },
+        {
+            "name": "URL",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/URL\" />"
+        },
+        {
+            "name": "UserMessage",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/UserMessage\" />"
+        },
+        {
+            "name": "BatchChatCompletionResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BatchChatCompletionResponse\" />"
+        },
+        {
+            "name": "BatchCompletionRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BatchCompletionRequest\" />"
+        },
+        {
+            "name": "PretrainedModel",
+            "description": "The type of the model. This is used to determine the model family and SKU.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/PretrainedModel\" />"
+        },
+        {
+            "name": "BatchCompletionResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BatchCompletionResponse\" />"
+        },
+        {
+            "name": "ChatCompletionRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ChatCompletionRequest\" />"
+        },
+        {
+            "name": "ChatCompletionResponseEvent",
+            "description": "Chat completion response event.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/ChatCompletionResponseEvent\" />"
+        },
+        {
+            "name": "ChatCompletionResponseEventType",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ChatCompletionResponseEventType\" />"
+        },
+        {
+            "name": "ChatCompletionResponseStreamChunk",
+            "description": "SSE-stream of these events.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/ChatCompletionResponseStreamChunk\" />"
+        },
+        {
+            "name": "TokenLogProbs",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/TokenLogProbs\" />"
+        },
+        {
+            "name": "ToolCallDelta",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolCallDelta\" />"
+        },
+        {
+            "name": "ToolCallParseStatus",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolCallParseStatus\" />"
+        },
+        {
+            "name": "CompletionRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/CompletionRequest\" />"
+        },
+        {
+            "name": "CompletionResponseStreamChunk",
+            "description": "streamed completion response.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/CompletionResponseStreamChunk\" />"
+        },
+        {
+            "name": "AgenticSystemCreateRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemCreateRequest\" />"
+        },
+        {
+            "name": "AgenticSystemInstanceConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemInstanceConfig\" />"
+        },
+        {
+            "name": "AgenticSystemToolDefinition",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemToolDefinition\" />"
+        },
+        {
+            "name": "BuiltinShield",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BuiltinShield\" />"
+        },
+        {
+            "name": "OnViolationAction",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/OnViolationAction\" />"
+        },
+        {
+            "name": "RestAPIExecutionConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/RestAPIExecutionConfig\" />"
+        },
+        {
+            "name": "RestAPIMethod",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/RestAPIMethod\" />"
+        },
+        {
+            "name": "ShieldDefinition",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ShieldDefinition\" />"
+        },
+        {
+            "name": "AgenticSystemCreateResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemCreateResponse\" />"
+        },
+        {
+            "name": "AgenticSystemSessionCreateRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemSessionCreateRequest\" />"
+        },
+        {
+            "name": "AgenticSystemSessionCreateResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemSessionCreateResponse\" />"
+        },
+        {
+            "name": "AgenticSystemTurnCreateRequest",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemTurnCreateRequest\" />"
+        },
+        {
+            "name": "AgenticSystemTurnResponseStreamChunk",
+            "description": "Server side event (SSE) stream of these events\n\n<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemTurnResponseStreamChunk\" />"
+        },
+        {
+            "name": "CreateDatasetRequest",
+            "description": "Request to create a dataset.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/CreateDatasetRequest\" />"
+        },
+        {
+            "name": "TrainEvalDataset",
+            "description": "Dataset to be used for training or evaluating language models.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/TrainEvalDataset\" />"
+        },
+        {
+            "name": "TrainEvalDatasetColumnType",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/TrainEvalDatasetColumnType\" />"
+        },
+        {
+            "name": "InferenceStep",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/InferenceStep\" />"
+        },
+        {
+            "name": "MemoryBankDocument",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/MemoryBankDocument\" />"
+        },
+        {
+            "name": "MemoryRetrievalStep",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/MemoryRetrievalStep\" />"
+        },
+        {
+            "name": "Session",
+            "description": "A single session of an interaction with an Agentic System.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Session\" />"
+        },
+        {
+            "name": "ShieldCallStep",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ShieldCallStep\" />"
+        },
+        {
+            "name": "ShieldResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ShieldResponse\" />"
+        },
+        {
+            "name": "ToolExecutionStep",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolExecutionStep\" />"
+        },
+        {
+            "name": "ToolResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ToolResponse\" />"
+        },
+        {
+            "name": "Turn",
+            "description": "A single turn in an interaction with an Agentic System.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Turn\" />"
+        },
+        {
+            "name": "AgenticSystemStepResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/AgenticSystemStepResponse\" />"
+        },
+        {
+            "name": "EvaluationJobArtifactsResponse",
+            "description": "Artifacts of a evaluation job.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/EvaluationJobArtifactsResponse\" />"
+        },
+        {
+            "name": "EvaluationJobLogStream",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/EvaluationJobLogStream\" />"
+        },
+        {
+            "name": "EvaluationJobStatusResponse",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/EvaluationJobStatusResponse\" />"
+        },
+        {
+            "name": "EvaluationJob",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/EvaluationJob\" />"
+        },
+        {
+            "name": "MemoryBank",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/MemoryBank\" />"
+        },
+        {
+            "name": "Checkpoint",
+            "description": "Checkpoint created during training runs\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Checkpoint\" />"
+        },
+        {
+            "name": "PostTrainingJobArtifactsResponse",
+            "description": "Artifacts of a finetuning job.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingJobArtifactsResponse\" />"
+        },
+        {
+            "name": "PostTrainingJobLogStream",
+            "description": "Stream of logs from a finetuning job.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingJobLogStream\" />"
+        },
+        {
+            "name": "PostTrainingJobStatus",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingJobStatus\" />"
+        },
+        {
+            "name": "PostTrainingJobStatusResponse",
+            "description": "Status of a finetuning job.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingJobStatusResponse\" />"
+        },
+        {
+            "name": "PostTrainingJob",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingJob\" />"
+        },
+        {
+            "name": "EvaluateQuestionAnsweringRequest",
+            "description": "Request to evaluate question answering.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/EvaluateQuestionAnsweringRequest\" />"
+        },
+        {
+            "name": "EvaluateSummarizationRequest",
+            "description": "Request to evaluate summarization.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/EvaluateSummarizationRequest\" />"
+        },
+        {
+            "name": "EvaluateTextGenerationRequest",
+            "description": "Request to evaluate text generation.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/EvaluateTextGenerationRequest\" />"
+        },
+        {
+            "name": "RewardModel",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/RewardModel\" />"
+        },
+        {
+            "name": "SyntheticDataGenerationRequest",
+            "description": "Request to generate synthetic data. A small batch of prompts and a filtering function\n\n<SchemaDefinition schemaRef=\"#/components/schemas/SyntheticDataGenerationRequest\" />"
+        },
+        {
+            "name": "ScoredDialogGenerations",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ScoredDialogGenerations\" />"
+        },
+        {
+            "name": "ScoredMessage",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/ScoredMessage\" />"
+        },
+        {
+            "name": "SyntheticDataGenerationResponse",
+            "description": "Response from the synthetic data generation. Batch of (prompt, response, score) tuples that pass the threshold.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/SyntheticDataGenerationResponse\" />"
+        },
+        {
+            "name": "DPOAlignmentConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/DPOAlignmentConfig\" />"
+        },
+        {
+            "name": "OptimizerConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/OptimizerConfig\" />"
+        },
+        {
+            "name": "PostTrainingRLHFRequest",
+            "description": "Request to finetune a model.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingRLHFRequest\" />"
+        },
+        {
+            "name": "RLHFAlgorithm",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/RLHFAlgorithm\" />"
+        },
+        {
+            "name": "TrainingConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/TrainingConfig\" />"
+        },
+        {
+            "name": "DialogGenerations",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/DialogGenerations\" />"
+        },
+        {
+            "name": "RewardScoringRequest",
+            "description": "Request to score a reward function. A list of prompts and a list of responses per prompt.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/RewardScoringRequest\" />"
+        },
+        {
+            "name": "RewardScoringResponse",
+            "description": "Response from the reward scoring. Batch of (prompt, response, score) tuples that pass the threshold.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/RewardScoringResponse\" />"
+        },
+        {
+            "name": "DoraFinetuningConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/DoraFinetuningConfig\" />"
+        },
+        {
+            "name": "FinetuningAlgorithm",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/FinetuningAlgorithm\" />"
+        },
+        {
+            "name": "LoraFinetuningConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/LoraFinetuningConfig\" />"
+        },
+        {
+            "name": "PostTrainingSFTRequest",
+            "description": "Request to finetune a model.\n\n<SchemaDefinition schemaRef=\"#/components/schemas/PostTrainingSFTRequest\" />"
+        },
+        {
+            "name": "QLoraFinetuningConfig",
+            "description": "<SchemaDefinition schemaRef=\"#/components/schemas/QLoraFinetuningConfig\" />"
+        }
+    ],
+    "x-tagGroups": [
+        {
+            "name": "Operations",
+            "tags": [
+                "AgenticSystem",
+                "Datasets",
+                "Evaluations",
+                "Inference",
+                "MemoryBanks",
+                "PostTraining",
+                "RewardScoring",
+                "SyntheticDataGeneration"
+            ]
+        },
+        {
+            "name": "Types",
+            "tags": [
+                "AgenticSystemCreateRequest",
+                "AgenticSystemCreateResponse",
+                "AgenticSystemInstanceConfig",
+                "AgenticSystemSessionCreateRequest",
+                "AgenticSystemSessionCreateResponse",
+                "AgenticSystemStepResponse",
+                "AgenticSystemToolDefinition",
+                "AgenticSystemTurnCreateRequest",
+                "AgenticSystemTurnResponseStreamChunk",
+                "Attachment",
+                "BatchChatCompletionRequest",
+                "BatchChatCompletionResponse",
+                "BatchCompletionRequest",
+                "BatchCompletionResponse",
+                "Bf16QuantizationConfig",
+                "BuiltinShield",
+                "BuiltinTool",
+                "ChatCompletionRequest",
+                "ChatCompletionResponseEvent",
+                "ChatCompletionResponseEventType",
+                "ChatCompletionResponseStreamChunk",
+                "Checkpoint",
+                "CompletionMessage",
+                "CompletionRequest",
+                "CompletionResponseStreamChunk",
+                "CreateDatasetRequest",
+                "DPOAlignmentConfig",
+                "DialogGenerations",
+                "DoraFinetuningConfig",
+                "EvaluateQuestionAnsweringRequest",
+                "EvaluateSummarizationRequest",
+                "EvaluateTextGenerationRequest",
+                "EvaluationJob",
+                "EvaluationJobArtifactsResponse",
+                "EvaluationJobLogStream",
+                "EvaluationJobStatusResponse",
+                "FinetuningAlgorithm",
+                "Fp8QuantizationConfig",
+                "InferenceStep",
+                "InstructModel",
+                "LoraFinetuningConfig",
+                "MemoryBank",
+                "MemoryBankDocument",
+                "MemoryRetrievalStep",
+                "OnViolationAction",
+                "OptimizerConfig",
+                "PostTrainingJob",
+                "PostTrainingJobArtifactsResponse",
+                "PostTrainingJobLogStream",
+                "PostTrainingJobStatus",
+                "PostTrainingJobStatusResponse",
+                "PostTrainingRLHFRequest",
+                "PostTrainingSFTRequest",
+                "PretrainedModel",
+                "QLoraFinetuningConfig",
+                "RLHFAlgorithm",
+                "RestAPIExecutionConfig",
+                "RestAPIMethod",
+                "RewardModel",
+                "RewardScoringRequest",
+                "RewardScoringResponse",
+                "SamplingParams",
+                "SamplingStrategy",
+                "ScoredDialogGenerations",
+                "ScoredMessage",
+                "Session",
+                "ShieldCallStep",
+                "ShieldDefinition",
+                "ShieldResponse",
+                "StopReason",
+                "SyntheticDataGenerationRequest",
+                "SyntheticDataGenerationResponse",
+                "SystemMessage",
+                "TokenLogProbs",
+                "ToolCall",
+                "ToolCallDelta",
+                "ToolCallParseStatus",
+                "ToolDefinition",
+                "ToolExecutionStep",
+                "ToolParamDefinition",
+                "ToolResponse",
+                "ToolResponseMessage",
+                "TrainEvalDataset",
+                "TrainEvalDatasetColumnType",
+                "TrainingConfig",
+                "Turn",
+                "URL",
+                "UserMessage"
+            ]
+        }
+    ]
+};
+            options = {
+                downloadFileName: "openapi.json",
+                expandResponses: "200",
+                expandSingleSchemaField: true,
+                jsonSampleExpandLevel: "all",
+                schemaExpansionLevel: "all",
+            };
+            element = document.getElementById("openapi-container");
+            Redoc.init(spec, options, element);
+
+            if (spec.info && spec.info.title) {
+                document.title = spec.info.title;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="openapi-container"></div>
+</body>
+
+</html>
