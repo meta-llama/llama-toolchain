@@ -1,0 +1,10 @@
+name: local-runpod
+distribution_spec:
+  description: Use Runpod.io for running LLM inference
+  providers:
+    inference: remote::runpod
+    memory: meta-reference
+    safety: meta-reference
+    agents: meta-reference
+    telemetry: meta-reference
+image_type: conda
