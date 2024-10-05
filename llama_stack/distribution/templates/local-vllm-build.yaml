@@ -1,0 +1,10 @@
+name: local-vllm
+distribution_spec:
+  description: Use vLLM for running LLM inference
+  providers:
+    inference: vllm
+    memory: meta-reference
+    safety: meta-reference
+    agents: meta-reference
+    telemetry: meta-reference
+image_type: docker
