@@ -104,4 +104,15 @@ def available_providers() -> List[ProviderSpec]:
                 config_class="llama_stack.providers.adapters.inference.bedrock.BedrockConfig",
             ),
         ),
+        remote_provider_spec(
+            api=Api.inference,
+            adapter=AdapterSpec(
+                adapter_id="runpod",
+                pip_packages=[
+                    "openai",
+                ],
+                module="llama_stack.providers.adapters.inference.runpod",
+                config_class="llama_stack.providers.adapters.inference.runpod.RunpodImplConfig",
+            ),
+        ),
     ]
