@@ -1,0 +1,10 @@
+name: local-sambanova
+distribution_spec:
+  description: Use SambaNova Cloud API for running LLM inference
+  providers:
+    inference: remote::sambanova
+    memory: meta-reference
+    safety: meta-reference
+    agents: meta-reference
+    telemetry: meta-reference
+image_type: conda
