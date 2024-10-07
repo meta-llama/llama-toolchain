@@ -4,7 +4,7 @@
 # This source code is licensed under the terms described in the LICENSE file in
 # the root directory of this source tree.
 
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Union
 
 from llama_models.llama3.api.chat_format import ChatFormat
 
@@ -61,8 +61,52 @@ class TogetherInferenceAdapter(
         sampling_params: Optional[SamplingParams] = SamplingParams(),
         stream: Optional[bool] = False,
         logprobs: Optional[LogProbConfig] = None,
-    ) -> AsyncGenerator:
-        raise NotImplementedError()
+    ) -> AsyncGenerator[Union[CompletionResponse, CompletionResponseStreamChunk], None]:
+        together_api_key = self.config.api_key or self.get_request_provider_data().together_api_key
+        client = Together(api_key=together_api_key)
+        
+        together_model = self.map_to_provider_model(model)
+        options = self.get_together_chat_options(ChatCompletionRequest(
+            model=model,
+            messages=[],
+            sampling_params=sampling_params,
+            stream=stream,
+            logprobs=logprobs,
+        ))
+
+        if not stream:
+            response = client.completions.create(
+                model=together_model,
+                prompt=content,
+                stream=False,
+                **options,
+            )
+            yield CompletionResponse(
+                completion=response.choices[0].text,
+                logprobs=None,  # Together doesn't provide logprobs
+            )
+        else:
+            for chunk in client.completions.create(
+                model=together_model,
+                prompt=content,
+                stream=True,
+                **options,
+            ):
+                if chunk.choices[0].text:
+                    yield CompletionResponseStreamChunk(
+                        event=CompletionResponseEvent(
+                            event_type=CompletionResponseEventType.progress,
+                            delta=chunk.choices[0].text,
+                        )
+                    )
+            
+            yield CompletionResponseStreamChunk(
+                event=CompletionResponseEvent(
+                    event_type=CompletionResponseEventType.complete,
+                    delta="",
+                    stop_reason=StopReason.end_of_turn,
+                )
+            )
 
     def _messages_to_together_messages(self, messages: list[Message]) -> list:
         together_messages = []

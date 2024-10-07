@@ -4,7 +4,7 @@
 # This source code is licensed under the terms described in the LICENSE file in
 # the root directory of this source tree.
 
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Union
 
 from fireworks.client import Fireworks
 
@@ -56,8 +56,49 @@ class FireworksInferenceAdapter(Inference, RoutableProviderForModels):
         sampling_params: Optional[SamplingParams] = SamplingParams(),
         stream: Optional[bool] = False,
         logprobs: Optional[LogProbConfig] = None,
-    ) -> AsyncGenerator:
-        raise NotImplementedError()
+    ) -> AsyncGenerator[Union[CompletionResponse, CompletionResponseStreamChunk], None]:
+        fireworks_model = self.map_to_provider_model(model)
+        options = self.get_fireworks_chat_options(ChatCompletionRequest(
+            model=model,
+            messages=[],
+            sampling_params=sampling_params,
+            stream=stream,
+            logprobs=logprobs,
+        ))
+
+        if not stream:
+            response = await self.client.completions.create(
+                model=fireworks_model,
+                prompt=content,
+                stream=False,
+                **options,
+            )
+            yield CompletionResponse(
+                completion=response.choices[0].text,
+                logprobs=None,  # Fireworks doesn't provide logprobs
+            )
+        else:
+            async for chunk in self.client.completions.create(
+                model=fireworks_model,
+                prompt=content,
+                stream=True,
+                **options,
+            ):
+                if chunk.choices[0].text:
+                    yield CompletionResponseStreamChunk(
+                        event=CompletionResponseEvent(
+                            event_type=CompletionResponseEventType.progress,
+                            delta=chunk.choices[0].text,
+                        )
+                    )
+            
+            yield CompletionResponseStreamChunk(
+                event=CompletionResponseEvent(
+                    event_type=CompletionResponseEventType.complete,
+                    delta="",
+                    stop_reason=StopReason.end_of_turn,
+                )
+            )
 
     def _messages_to_fireworks_messages(self, messages: list[Message]) -> list:
         fireworks_messages = []

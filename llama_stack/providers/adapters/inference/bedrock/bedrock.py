@@ -95,8 +95,31 @@ class BedrockInferenceAdapter(Inference, RoutableProviderForModels):
         sampling_params: Optional[SamplingParams] = SamplingParams(),
         stream: Optional[bool] = False,
         logprobs: Optional[LogProbConfig] = None,
-    ) -> Union[CompletionResponse, CompletionResponseStreamChunk]:
-        raise NotImplementedError()
+    ) -> AsyncGenerator[Union[CompletionResponse, CompletionResponseStreamChunk], None]:
+        # Convert the content to a single message
+        messages = [UserMessage(content=content)]
+
+        # Use the existing chat_completion method
+        async for response in self.chat_completion(
+            model=model,
+            messages=messages,
+            sampling_params=sampling_params,
+            stream=stream,
+            logprobs=logprobs,
+        ):
+            if isinstance(response, ChatCompletionResponse):
+                yield CompletionResponse(
+                    completion=response.completion_message.content[0],
+                    logprobs=response.logprobs,
+                )
+            elif isinstance(response, ChatCompletionResponseStreamChunk):
+                yield CompletionResponseStreamChunk(
+                    event=CompletionResponseEvent(
+                        event_type=CompletionResponseEventType(response.event.event_type.value),
+                        delta=response.event.delta,
+                        stop_reason=response.event.stop_reason,
+                    )
+                )
 
     @staticmethod
     def _bedrock_stop_reason_to_stop_reason(bedrock_stop_reason: str) -> StopReason:
