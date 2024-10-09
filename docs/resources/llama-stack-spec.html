@@ -21,7 +21,7 @@
     "info": {
         "title": "[DRAFT] Llama Stack Specification",
         "version": "0.0.1",
-        "description": "This is the specification of the llama stack that provides\n                a set of endpoints and their corresponding interfaces that are tailored to\n                best leverage Llama Models. The specification is still in draft and subject to change.\n                Generated at 2024-10-08 15:18:57.600111"
+        "description": "This is the specification of the llama stack that provides\n                a set of endpoints and their corresponding interfaces that are tailored to\n                best leverage Llama Models. The specification is still in draft and subject to change.\n                Generated at 2024-10-08 19:52:19.723001"
     },
     "servers": [
         {
@@ -1828,7 +1828,7 @@
                     }
                 },
                 "tags": [
-                    "Memory"
+                    "MemoryBanks"
                 ],
                 "parameters": [
                     {
@@ -1853,7 +1853,7 @@
                 }
             }
         },
-        "/inference/register_model": {
+        "/models/register": {
             "post": {
                 "responses": {
                     "200": {
@@ -1886,7 +1886,7 @@
                 }
             }
         },
-        "/safety/register_shield": {
+        "/shields/register": {
             "post": {
                 "responses": {
                     "200": {
@@ -6293,16 +6293,19 @@
             "name": "BatchInference"
         },
         {
+            "name": "MemoryBanks"
+        },
+        {
+            "name": "Inspect"
+        },
+        {
             "name": "Datasets"
         },
         {
+            "name": "RewardScoring"
+        },
+        {
             "name": "Inference"
-        },
-        {
-            "name": "Evaluations"
-        },
-        {
-            "name": "Memory"
         },
         {
             "name": "Safety"
@@ -6311,28 +6314,25 @@
             "name": "PostTraining"
         },
         {
-            "name": "MemoryBanks"
-        },
-        {
             "name": "Models"
-        },
-        {
-            "name": "Shields"
-        },
-        {
-            "name": "Inspect"
-        },
-        {
-            "name": "SyntheticDataGeneration"
-        },
-        {
-            "name": "Telemetry"
         },
         {
             "name": "Agents"
         },
         {
-            "name": "RewardScoring"
+            "name": "Evaluations"
+        },
+        {
+            "name": "Telemetry"
+        },
+        {
+            "name": "SyntheticDataGeneration"
+        },
+        {
+            "name": "Memory"
+        },
+        {
+            "name": "Shields"
         },
         {
             "name": "BuiltinTool",

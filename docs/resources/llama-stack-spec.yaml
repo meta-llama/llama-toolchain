@@ -2544,7 +2544,7 @@ info:
   description: "This is the specification of the llama stack that provides\n     \
     \           a set of endpoints and their corresponding interfaces that are tailored\
     \ to\n                best leverage Llama Models. The specification is still in\
-    \ draft and subject to change.\n                Generated at 2024-10-08 15:18:57.600111"
+    \ draft and subject to change.\n                Generated at 2024-10-08 19:52:19.723001"
   title: '[DRAFT] Llama Stack Specification'
   version: 0.0.1
 jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
@@ -3166,27 +3166,6 @@ paths:
           description: OK
       tags:
       - Inference
-  /inference/register_model:
-    post:
-      parameters:
-      - description: JSON-encoded provider data which will be made available to the
-          adapter servicing the API
-        in: header
-        name: X-LlamaStack-ProviderData
-        required: false
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterModelRequest'
-        required: true
-      responses:
-        '200':
-          description: OK
-      tags:
-      - Models
   /memory/documents/delete:
     post:
       parameters:
@@ -3378,7 +3357,7 @@ paths:
         '200':
           description: OK
       tags:
-      - Memory
+      - MemoryBanks
   /models/get:
     get:
       parameters:
@@ -3421,6 +3400,27 @@ paths:
             application/jsonl:
               schema:
                 $ref: '#/components/schemas/ModelDef'
+          description: OK
+      tags:
+      - Models
+  /models/register:
+    post:
+      parameters:
+      - description: JSON-encoded provider data which will be made available to the
+          adapter servicing the API
+        in: header
+        name: X-LlamaStack-ProviderData
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterModelRequest'
+        required: true
+      responses:
+        '200':
           description: OK
       tags:
       - Models
@@ -3655,27 +3655,6 @@ paths:
           description: OK
       tags:
       - Inspect
-  /safety/register_shield:
-    post:
-      parameters:
-      - description: JSON-encoded provider data which will be made available to the
-          adapter servicing the API
-        in: header
-        name: X-LlamaStack-ProviderData
-        required: false
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterShieldRequest'
-        required: true
-      responses:
-        '200':
-          description: OK
-      tags:
-      - Shields
   /safety/run_shield:
     post:
       parameters:
@@ -3768,6 +3747,27 @@ paths:
           description: OK
       tags:
       - Shields
+  /shields/register:
+    post:
+      parameters:
+      - description: JSON-encoded provider data which will be made available to the
+          adapter servicing the API
+        in: header
+        name: X-LlamaStack-ProviderData
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterShieldRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+      tags:
+      - Shields
   /synthetic_data_generation/generate:
     post:
       parameters:
@@ -3844,20 +3844,20 @@ servers:
 - url: http://any-hosted-llama-stack.com
 tags:
 - name: BatchInference
+- name: MemoryBanks
+- name: Inspect
 - name: Datasets
+- name: RewardScoring
 - name: Inference
-- name: Evaluations
-- name: Memory
 - name: Safety
 - name: PostTraining
-- name: MemoryBanks
 - name: Models
-- name: Shields
-- name: Inspect
-- name: SyntheticDataGeneration
-- name: Telemetry
 - name: Agents
-- name: RewardScoring
+- name: Evaluations
+- name: Telemetry
+- name: SyntheticDataGeneration
+- name: Memory
+- name: Shields
 - description: <SchemaDefinition schemaRef="#/components/schemas/BuiltinTool" />
   name: BuiltinTool
 - description: <SchemaDefinition schemaRef="#/components/schemas/CompletionMessage"
