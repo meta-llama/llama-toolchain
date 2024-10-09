@@ -4,7 +4,7 @@
 # This source code is licensed under the terms described in the LICENSE file in
 # the root directory of this source tree.
 
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional, List
 
 import httpx
 
@@ -38,6 +38,7 @@ class OllamaInferenceAdapter(Inference, RoutableProviderForModels):
         self.url = url
         tokenizer = Tokenizer.get_instance()
         self.formatter = ChatFormat(tokenizer)
+        self.loaded_models = set()
 
     @property
     def client(self) -> AsyncClient:
@@ -55,6 +56,30 @@ class OllamaInferenceAdapter(Inference, RoutableProviderForModels):
     async def shutdown(self) -> None:
         pass
 
+    async def register_model(self, model_identifier: str) -> None:
+        """
+        Registers and preloads the specified model.
+        """
+        ollama_model = self.map_to_provider_model(model_identifier)
+        if ollama_model in self.loaded_models:
+            return  # Model already loaded, skip
+
+        res = await self.client.ps()
+        need_model_pull = True
+        for r in res["models"]:
+            if ollama_model == r["model"]:
+                need_model_pull = False
+                break
+
+        if need_model_pull:
+            print(f"Pulling model: {ollama_model}")
+            status = await self.client.pull(ollama_model)
+            assert (
+                status["status"] == "success"
+            ), f"Failed to pull model {ollama_model} in Ollama"
+
+        self.loaded_models.add(ollama_model)
+
     async def completion(
         self,
         model: str,
@@ -65,7 +90,7 @@ class OllamaInferenceAdapter(Inference, RoutableProviderForModels):
     ) -> AsyncGenerator:
         raise NotImplementedError()
 
-    def _messages_to_ollama_messages(self, messages: list[Message]) -> list:
+    def _messages_to_ollama_messages(self, messages: List[Message]) -> List[dict]:
         ollama_messages = []
         for message in messages:
             if message.role == "ipython":
@@ -80,8 +105,9 @@ class OllamaInferenceAdapter(Inference, RoutableProviderForModels):
         options = {}
         if request.sampling_params is not None:
             for attr in {"temperature", "top_p", "top_k", "max_tokens"}:
-                if getattr(request.sampling_params, attr):
-                    options[attr] = getattr(request.sampling_params, attr)
+                value = getattr(request.sampling_params, attr)
+                if value is not None:
+                    options[attr] = value
             if (
                 request.sampling_params.repetition_penalty is not None
                 and request.sampling_params.repetition_penalty != 1.0
@@ -101,6 +127,9 @@ class OllamaInferenceAdapter(Inference, RoutableProviderForModels):
         stream: Optional[bool] = False,
         logprobs: Optional[LogProbConfig] = None,
     ) -> AsyncGenerator:
+        # Register and preload the model before using it
+        await self.register_model(model)
+
         request = ChatCompletionRequest(
             model=model,
             messages=messages,
@@ -113,23 +142,9 @@ class OllamaInferenceAdapter(Inference, RoutableProviderForModels):
         )
 
         messages = augment_messages_for_tools(request)
-        # accumulate sampling params and other options to pass to ollama
+        # Accumulate sampling params and other options to pass to Ollama
         options = self.get_ollama_chat_options(request)
         ollama_model = self.map_to_provider_model(request.model)
-
-        res = await self.client.ps()
-        need_model_pull = True
-        for r in res["models"]:
-            if ollama_model == r["model"]:
-                need_model_pull = False
-                break
-
-        if need_model_pull:
-            print(f"Pulling model: {ollama_model}")
-            status = await self.client.pull(ollama_model)
-            assert (
-                status["status"] == "success"
-            ), f"Failed to pull model {self.model} in ollama"
 
         if not request.stream:
             r = await self.client.chat(
