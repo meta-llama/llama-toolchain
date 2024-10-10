@@ -1,0 +1,10 @@
+name: local-openai
+distribution_spec:
+  description: Running OpenAI API compatible LLM inference
+  providers:
+    inference: remote::openai
+    memory: meta-reference
+    safety: meta-reference
+    agents: meta-reference
+    telemetry: meta-reference
+image_type: docker

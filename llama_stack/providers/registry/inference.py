@@ -48,6 +48,15 @@ def available_providers() -> List[ProviderSpec]:
         remote_provider_spec(
             api=Api.inference,
             adapter=AdapterSpec(
+                adapter_type="openai",
+                pip_packages=["openai"],
+                module="llama_stack.providers.adapters.inference.openai",
+                config_class="llama_stack.providers.adapters.inference.openai.OpenAIImplConfig",
+            ),
+        ),
+        remote_provider_spec(
+            api=Api.inference,
+            adapter=AdapterSpec(
                 adapter_type="tgi",
                 pip_packages=["huggingface_hub", "aiohttp"],
                 module="llama_stack.providers.adapters.inference.tgi",
