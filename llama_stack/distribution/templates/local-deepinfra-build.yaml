@@ -1,0 +1,10 @@
+name: local-deepinfra
+distribution_spec:
+  description: Use DeepInfra for running LLM inference
+  providers:
+    inference: remote::deepinfra
+    memory: meta-reference
+    safety: meta-reference
+    agents: meta-reference
+    telemetry: meta-reference
+image_type: conda

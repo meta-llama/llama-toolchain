@@ -52,6 +52,7 @@ A Distribution is where APIs and Providers are assembled together to provide a c
 |  Fireworks  |  Hosted  | :heavy_check_mark:  | :heavy_check_mark:  |  :heavy_check_mark:  |    |   |
 |  AWS Bedrock  |  Hosted  |    |  :heavy_check_mark:  |    | :heavy_check_mark:  | |
 |  Together  |  Hosted  |  :heavy_check_mark:  |  :heavy_check_mark:  |   | :heavy_check_mark:  |  |
+|  DeepInfra  |  Hosted  |  :heavy_check_mark:  |  :heavy_check_mark:  |   |   |  |
 |  Ollama  | Single Node   |    |  :heavy_check_mark:  |    |   |
 |  TGI  |  Hosted and Single Node  |    |  :heavy_check_mark:  |    |   |
 | Chroma | Single Node |  |  | :heavy_check_mark: |  |  |
