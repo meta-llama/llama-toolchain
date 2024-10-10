@@ -1,0 +1,10 @@
+name: local-clarifai
+distribution_spec:
+  description: Use Clarifai for running LLM inference
+  providers:
+    inference: remote::clarifai
+    memory: meta-reference
+    safety: meta-reference
+    agents: meta-reference
+    telemetry: meta-reference
+image_type: conda

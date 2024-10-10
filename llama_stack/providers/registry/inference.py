@@ -115,6 +115,17 @@ def available_providers() -> List[ProviderSpec]:
                 config_class="llama_stack.providers.adapters.inference.databricks.DatabricksImplConfig",
             ),
         ),
+        remote_provider_spec(
+            api=Api.inference,
+            adapter=AdapterSpec(
+                adapter_type="clarifai",
+                pip_packages=[
+                    "clarifai",
+                ],
+                module="llama_stack.providers.adapters.inference.clarifai",
+                config_class="llama_stack.providers.adapters.inference.clarifai.ClarifaiImplConfig",
+            ),
+        ),
         InlineProviderSpec(
             api=Api.inference,
             provider_type="vllm",
