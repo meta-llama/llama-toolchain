@@ -44,17 +44,19 @@ A Distribution is where APIs and Providers are assembled together to provide a c
 ### API Providers
 
 
-|  **API Provider Builder** |  **Environments** | **Agents** | **Inference** | **Memory** | **Safety** | **Telemetry** |
-| :----: | :----: | :----: | :----: | :----: | :----: | :----: |
-|  Meta Reference  |  Single Node | :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
-|  Fireworks  |  Hosted  | :heavy_check_mark:  | :heavy_check_mark:  |  :heavy_check_mark:  |    |   |
-|  AWS Bedrock  |  Hosted  |    |  :heavy_check_mark:  |    | :heavy_check_mark:  | |
-|  Together  |  Hosted  |  :heavy_check_mark:  |  :heavy_check_mark:  |   | :heavy_check_mark:  |  |
-|  Ollama  | Single Node   |    |  :heavy_check_mark:  |    |   |
-|  TGI  |  Hosted and Single Node  |    |  :heavy_check_mark:  |    |   |
-| Chroma | Single Node |  |  | :heavy_check_mark: |  |  |
-| PG Vector | Single Node |  |  | :heavy_check_mark: |  |  |
-| PyTorch ExecuTorch | On-device iOS | :heavy_check_mark:  | :heavy_check_mark:  |  |  |
+| **API Provider Builder** |    **Environments**    |     **Agents**     |   **Inference**    |     **Memory**     |     **Safety**     |   **Telemetry**    |
+| :----------------------: | :--------------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
+|      Meta Reference      |      Single Node       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|        Fireworks         |         Hosted         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+|       AWS Bedrock        |         Hosted         |                    | :heavy_check_mark: |                    | :heavy_check_mark: |                    |
+|         Together         |         Hosted         | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |                    |
+|          Ollama          |      Single Node       |                    | :heavy_check_mark: |                    |                    |
+|           TGI            | Hosted and Single Node |                    | :heavy_check_mark: |                    |                    |
+|          Chroma          |      Single Node       |                    |                    | :heavy_check_mark: |                    |                    |
+|        PG Vector         |      Single Node       |                    |                    | :heavy_check_mark: |                    |                    |
+|    PyTorch ExecuTorch    |     On-device iOS      | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+|          Qdrant          | Hosted and Single Node |                    |                    | :heavy_check_mark: |                    |                    |
+
 
 ### Distributions
 |  **Distribution Provider** |  **Docker** | **Inference** | **Memory** | **Safety** | **Telemetry** |
