@@ -68,10 +68,7 @@ class AgentPersistence:
         )
 
     async def get_session_turns(self, session_id: str) -> List[Turn]:
-        values = await self.kvstore.range(
-            start_key=f"session:{self.agent_id}:{session_id}:",
-            end_key=f"session:{self.agent_id}:{session_id}:\xff\xff\xff\xff",
-        )
+        values = await self.kvstore.get_match(key_to_match=f"session:{self.agent_id}:{session_id}:")
         turns = []
         for value in values:
             try:

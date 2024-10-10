@@ -60,11 +60,11 @@ class SqliteKVStoreImpl(KVStore):
             await db.execute(f"DELETE FROM {self.table_name} WHERE key = ?", (key,))
             await db.commit()
 
-    async def range(self, start_key: str, end_key: str) -> List[str]:
+    async def get_match(self, key_to_match: str) -> List[str]:
         async with aiosqlite.connect(self.db_path) as db:
             async with db.execute(
-                f"SELECT key, value, expiration FROM {self.table_name} WHERE key >= ? AND key <= ?",
-                (start_key, end_key),
+                f"SELECT key, value, expiration FROM {self.table_name} WHERE key LIKE ?",
+                    (f"{key_to_match}%",),
             ) as cursor:
                 result = []
                 async for row in cursor:

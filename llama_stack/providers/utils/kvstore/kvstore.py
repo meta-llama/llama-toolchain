@@ -25,11 +25,11 @@ class InmemoryKVStoreImpl(KVStore):
     async def set(self, key: str, value: str) -> None:
         self._store[key] = value
 
-    async def range(self, start_key: str, end_key: str) -> List[str]:
+    async def get_match(self, key_to_match: str) -> List[str]:
         return [
-            self._store[key]
+            self._store.get[key]
             for key in self._store.keys()
-            if key >= start_key and key < end_key
+            if key.startswith(key_to_match)
         ]
 
 

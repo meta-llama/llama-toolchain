@@ -45,8 +45,22 @@ class RedisKVStoreImpl(KVStore):
         key = self._namespaced_key(key)
         await self.redis.delete(key)
 
-    async def range(self, start_key: str, end_key: str) -> List[str]:
-        start_key = self._namespaced_key(start_key)
-        end_key = self._namespaced_key(end_key)
+    async def get_match(self, key_to_match: str) -> List[str]:
+        key_to_match = self._namespaced_key(key_to_match)
 
-        return await self.redis.zrangebylex(start_key, end_key)
+        cursor = 0
+        keys = set()
+
+        while True:
+            cursor, keys_chunk = await self.redis.scan(cursor=cursor, match=f"{key_to_match}*", count=100)
+            keys.update(key.decode() for key in keys_chunk)
+            if cursor == 0:
+                break
+
+        if not keys:
+            return []
+
+        values = await self.redis.mget(*keys)
+        values = [value.decode() for value in values if value is not None]
+
+        return sorted(values)
