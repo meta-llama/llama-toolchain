@@ -11,7 +11,12 @@ apis:
 - memory_banks
 - inference
 - safety
+- evals
 providers:
+  evals:
+  - provider_id: meta-reference
+    provider_type: meta-reference
+    config: {}
   inference:
   - provider_id: meta-reference
     provider_type: meta-reference

@@ -152,7 +152,7 @@ def severity(levelname: str) -> LogSeverity:
     elif levelname == "INFO":
         return LogSeverity.INFO
     elif levelname == "WARNING":
-        return LogSeverity.WARNING
+        return LogSeverity.WARN
     elif levelname == "ERROR":
         return LogSeverity.ERROR
     elif levelname == "CRITICAL":
