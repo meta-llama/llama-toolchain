@@ -135,6 +135,19 @@ def convert_to_pydantic(annotation: Any, value: Any) -> Any:
         return TypeAdapter(annotation).validate_python(value)
 
     except Exception as e:
+        # Multipart form fields arrive as JSON strings over HTTP (e.g. expires_after);
+        # the in-process client must parse them into the model the way the server's form
+        # dependencies do.
+        if isinstance(value, str):
+            try:
+                return TypeAdapter(annotation).validate_python(json.loads(value))
+            except Exception as json_error:
+                logger.debug(
+                    "JSON string form field did not validate against annotation",
+                    value=value,
+                    annotation=annotation,
+                    error=str(json_error),
+                )
         # TODO: this is workardound for having Union[str, AgentToolGroup] in API schema.
         # We should get rid of any non-discriminated unions in the API schema.
         if origin is Union:
