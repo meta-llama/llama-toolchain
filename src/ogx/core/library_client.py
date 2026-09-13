@@ -28,7 +28,7 @@ from fastapi import Response as FastAPIResponse
 from ogx.core.utils.type_inspection import is_body_param, is_unwrapped_body_param
 
 try:
-    from ogx_open_client import (
+    from ogx_open_client import (  # type: ignore[import-not-found]
         NOT_GIVEN,
         APIResponse,
         AsyncAPIResponse,
@@ -135,6 +135,19 @@ def convert_to_pydantic(annotation: Any, value: Any) -> Any:
         return TypeAdapter(annotation).validate_python(value)
 
     except Exception as e:
+        # Multipart form fields arrive as JSON strings over HTTP (e.g. expires_after);
+        # the in-process client must parse them into the model the way the server's form
+        # dependencies do.
+        if isinstance(value, str):
+            try:
+                return TypeAdapter(annotation).validate_python(json.loads(value))
+            except Exception as json_error:
+                logger.debug(
+                    "JSON string form field did not validate against annotation",
+                    value=value,
+                    annotation=annotation,
+                    error=str(json_error),
+                )
         # TODO: this is workardound for having Union[str, AgentToolGroup] in API schema.
         # We should get rid of any non-discriminated unions in the API schema.
         if origin is Union:
@@ -235,7 +248,7 @@ async def _route_call_in_process(
     from fastapi.responses import StreamingResponse
 
     try:
-        from ogx_open_client.rest import RESTResponse
+        from ogx_open_client.rest import RESTResponse  # type: ignore[import-not-found]
     except ImportError:
         from ogx_client.rest import RESTResponse  # type: ignore[import-not-found,assignment,no-redef]
 

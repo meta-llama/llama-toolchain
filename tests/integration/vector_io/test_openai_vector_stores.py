@@ -4,17 +4,18 @@
 # This source code is licensed under the terms described in the LICENSE file in
 # the root directory of this source tree.
 
+import json
 import time
 from io import BytesIO
 
 import pytest
-from ogx_open_client import BadRequestError
+from ogx_client import BadRequestError
 from openai import BadRequestError as OpenAIBadRequestError
 from openai import OpenAI
 
 from ogx.core.library_client import OGXAsLibraryClient
 from ogx.log import get_logger
-from ogx_api import ChunkMetadata, EmbeddedChunk, ExpiresAfter
+from ogx_api import ChunkMetadata, EmbeddedChunk
 
 from ..conftest import vector_provider_wrapper
 
@@ -4203,7 +4204,6 @@ def test_openai_vector_store_attach_file(
 ):
     """Test OpenAI vector store attach file."""
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
-    from ogx_api import ExpiresAfter
 
     compat_client = compat_client_with_empty_stores
 
@@ -4223,7 +4223,7 @@ def test_openai_vector_store_attach_file(
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
         )
 
     # Attach the file to the vector store
@@ -4314,7 +4314,7 @@ def test_openai_vector_store_search_with_typed_filters(
             file_obj = compat_client.files.create(
                 file=buf,
                 purpose="assistants",
-                expires_after=ExpiresAfter(anchor="created_at", seconds=86400),
+                expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),
             )
         attach = compat_client.vector_stores.files.create(
             vector_store_id=vector_store.id,
@@ -4387,7 +4387,6 @@ def test_openai_vector_store_attach_files_on_creation(
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
 
     compat_client = compat_client_with_empty_stores
-    from ogx_api import ExpiresAfter
 
     # Create some files and attach them to the vector store
     valid_file_ids = []
@@ -4397,7 +4396,7 @@ def test_openai_vector_store_attach_files_on_creation(
             file = compat_client.files.create(
                 file=file_buffer,
                 purpose="assistants",
-                expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+                expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
             )
         valid_file_ids.append(file.id)
 
@@ -4452,7 +4451,6 @@ def test_openai_vector_store_list_files(
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
 
     compat_client = compat_client_with_empty_stores
-    from ogx_api import ExpiresAfter
 
     # Create a vector store
     vector_store = compat_client.vector_stores.create(
@@ -4471,7 +4469,7 @@ def test_openai_vector_store_list_files(
             file = compat_client.files.create(
                 file=file_buffer,
                 purpose="assistants",
-                expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+                expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
             )
 
         response = compat_client.vector_stores.files.create(
@@ -4544,7 +4542,6 @@ def test_openai_vector_store_retrieve_file_contents(
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
 
     compat_client = compat_client_with_empty_stores
-    from ogx_api import ExpiresAfter
 
     # Create a vector store
     vector_store = compat_client.vector_stores.create(
@@ -4564,7 +4561,7 @@ def test_openai_vector_store_retrieve_file_contents(
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
         )
 
     # Attach the file to the vector store
@@ -4605,7 +4602,6 @@ def test_openai_vector_store_delete_file(
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
 
     compat_client = compat_client_with_empty_stores
-    from ogx_api import ExpiresAfter
 
     # Create a vector store
     vector_store = compat_client.vector_stores.create(
@@ -4624,7 +4620,7 @@ def test_openai_vector_store_delete_file(
             file = compat_client.files.create(
                 file=file_buffer,
                 purpose="assistants",
-                expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+                expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
             )
 
         compat_client.vector_stores.files.create(
@@ -4671,7 +4667,6 @@ def test_openai_vector_store_delete_file_removes_from_vector_store(
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
 
     compat_client = compat_client_with_empty_stores
-    from ogx_api import ExpiresAfter
 
     # Create a vector store
     vector_store = compat_client.vector_stores.create(
@@ -4689,7 +4684,7 @@ def test_openai_vector_store_delete_file_removes_from_vector_store(
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
         )
 
     # Attach the file to the vector store
@@ -4723,7 +4718,6 @@ def test_openai_vector_store_update_file(
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
 
     compat_client = compat_client_with_empty_stores
-    from ogx_api import ExpiresAfter
 
     # Create a vector store
     vector_store = compat_client.vector_stores.create(
@@ -4741,7 +4735,7 @@ def test_openai_vector_store_update_file(
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
         )
 
     # Attach the file to the vector store
@@ -4780,7 +4774,6 @@ def test_create_vector_store_files_duplicate_vector_store_name(
     This test confirms that client.vector_stores.create() creates a unique ID
     """
     skip_if_provider_doesnt_support_openai_vector_stores(client_with_models)
-    from ogx_api import ExpiresAfter
 
     compat_client = compat_client_with_empty_stores
 
@@ -4792,7 +4785,7 @@ def test_create_vector_store_files_duplicate_vector_store_name(
             file = compat_client.files.create(
                 file=file_buffer,
                 purpose="assistants",
-                expires_after=ExpiresAfter(anchor="created_at", seconds=86400),  # 24 hours
+                expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),  # 24 hours
             )
         file_ids.append(file.id)
 
@@ -5310,7 +5303,7 @@ def test_openai_vector_store_file_contents_with_extra_query(
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),
         )
 
     file_attach_response = compat_client.vector_stores.files.create(
@@ -5493,7 +5486,7 @@ Data augmentation can increase the effective training set size.
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),
         )
 
     file_attach_response = compat_client.vector_stores.files.create(
@@ -5559,7 +5552,7 @@ def test_openai_vector_store_contextual_chunking_error_without_model(
         file = compat_client.files.create(
             file=file_buffer,
             purpose="assistants",
-            expires_after=ExpiresAfter(anchor="created_at", seconds=86400),
+            expires_after=json.dumps({"anchor": "created_at", "seconds": 86400}),
         )
 
     # Attempt to attach file with contextual strategy but no model_id
@@ -5637,7 +5630,7 @@ Data augmentation can increase the effective training set size.
     with BytesIO(document_content.encode()) as buf:
         buf.name = "ml_overview_static.txt"
         static_file = compat_client.files.create(
-            file=buf, purpose="assistants", expires_after=ExpiresAfter(anchor="created_at", seconds=86400)
+            file=buf, purpose="assistants", expires_after=json.dumps({"anchor": "created_at", "seconds": 86400})
         )
     static_attach = compat_client.vector_stores.files.create(
         vector_store_id=static_store.id,
@@ -5656,7 +5649,7 @@ Data augmentation can increase the effective training set size.
     with BytesIO(document_content.encode()) as buf:
         buf.name = "ml_overview_contextual.txt"
         ctx_file = compat_client.files.create(
-            file=buf, purpose="assistants", expires_after=ExpiresAfter(anchor="created_at", seconds=86400)
+            file=buf, purpose="assistants", expires_after=json.dumps({"anchor": "created_at", "seconds": 86400})
         )
     ctx_attach = compat_client.vector_stores.files.create(
         vector_store_id=ctx_store.id,
