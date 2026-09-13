@@ -28,7 +28,7 @@ from fastapi import Response as FastAPIResponse
 from ogx.core.utils.type_inspection import is_body_param, is_unwrapped_body_param
 
 try:
-    from ogx_open_client import (
+    from ogx_open_client import (  # type: ignore[import-not-found]
         NOT_GIVEN,
         APIResponse,
         AsyncAPIResponse,
@@ -248,7 +248,7 @@ async def _route_call_in_process(
     from fastapi.responses import StreamingResponse
 
     try:
-        from ogx_open_client.rest import RESTResponse
+        from ogx_open_client.rest import RESTResponse  # type: ignore[import-not-found]
     except ImportError:
         from ogx_client.rest import RESTResponse  # type: ignore[import-not-found,assignment,no-redef]
 
