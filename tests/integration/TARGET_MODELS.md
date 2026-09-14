@@ -61,7 +61,7 @@ Cron: `1 0 * * 0`
 | `anthropic` | anthropic/claude-3-5-haiku-20241022 | — | — | — | — | — |
 | `cerebras` | cerebras/gpt-oss-120b | — | — | — | — | — |
 | `databricks` | databricks/databricks-meta-llama-3-3-70b-instruct | — | databricks/databricks-bge-large-en | — | — | — |
-| `fireworks` | fireworks/accounts/fireworks/models/llama-v3p1-8b-instruct | — | fireworks/accounts/fireworks/models/qwen3-embedding-8b | — | — | — |
+| `fireworks` | fireworks/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b | — | fireworks/accounts/fireworks/models/qwen3-embedding-8b | — | — | — |
 | `groq` | groq/llama-3.3-70b-versatile | — | — | — | — | — |
 | `llama-api` | llama_openai_compat/Llama-3.3-8B-Instruct | — | — | — | — | — |
 | `llama-cpp-server` | llama-cpp-server/qwen2.5 | — | sentence-transformers/nomic-embed-text-v1.5 | — | — | — |

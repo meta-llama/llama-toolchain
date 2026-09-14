@@ -104,9 +104,7 @@ def available_providers() -> list[ProviderSpec]:
             api=Api.inference,
             adapter_type="fireworks",
             provider_type="remote::fireworks",
-            pip_packages=[
-                "fireworks-ai<=0.17.16",
-            ],
+            pip_packages=[],
             module="ogx.providers.remote.inference.fireworks",
             config_class="ogx.providers.remote.inference.fireworks.FireworksImplConfig",
             provider_data_validator="ogx.providers.remote.inference.fireworks.FireworksProviderDataValidator",

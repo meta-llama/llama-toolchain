@@ -210,8 +210,9 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
     "fireworks": Setup(
         name="fireworks",
         description="Fireworks provider with a text model",
+        # Least expensive text model at https://docs.fireworks.ai/serverless/pricing
         defaults={
-            "text_model": "fireworks/accounts/fireworks/models/llama-v3p1-8b-instruct",
+            "text_model": "fireworks/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b",
             "embedding_model": "fireworks/accounts/fireworks/models/qwen3-embedding-8b",
         },
     ),

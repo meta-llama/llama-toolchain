@@ -106,7 +106,6 @@ starter = [
     "emoji",
     "faiss-cpu",
     "fire",
-    "fireworks-ai<=0.17.16",
     "google-genai>=1.69.0,<2",
     "langdetect",
     "markitdown[all]",
