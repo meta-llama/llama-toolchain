@@ -283,7 +283,7 @@ jobs:
 
       - name: Setup test environment
         if: steps.should_run.outputs.run == 'true'
-        uses: ogx-ai/ogx/.github/actions/setup-test-environment@e1ba4f9f10fa45750f5b4f186a0c4ae59bc93e4d
+        uses: ogx-ai/ogx/.github/actions/setup-test-environment@a4f0c3fe5aa5d37d669d355474ff436de6d9e831
         with:
           python-version: "3.12"
           client-version: "latest"
@@ -317,7 +317,7 @@ jobs:
 
       - name: Run and record tests
         if: steps.should_run.outputs.run == 'true'
-        uses: ogx-ai/ogx/.github/actions/run-and-record-tests@e1ba4f9f10fa45750f5b4f186a0c4ae59bc93e4d
+        uses: ogx-ai/ogx/.github/actions/run-and-record-tests@a4f0c3fe5aa5d37d669d355474ff436de6d9e831
         env:
           OPENAI_API_KEY: ${{ matrix.provider.setup == 'gpt' && secrets.OPENAI_API_KEY || '' }}
           AZURE_API_KEY: ${{ matrix.provider.setup == 'azure' && secrets.AZURE_API_KEY || '' }}
