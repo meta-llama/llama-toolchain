@@ -310,18 +310,13 @@ def patch_httpx_for_test_id():
     client to server via HTTP headers. In library_client mode, this patch is a no-op
     since everything runs in the same process.
 
-    We use the _prepare_request hook that Stainless clients provide for mutating
+    We use the _prepare_request hook the client provides for mutating
     requests after construction but before sending.
     """
     try:
-        from ogx_open_client import OgxClient
-    except ImportError:
-        try:
-            from ogx_client import OgxClient
-        except ImportError as e:
-            raise ImportError(
-                "OgxClient was not found, install with `uv pip install ogx[openclient]` or `uv pip install ogx[client]`"
-            ) from e
+        from ogx_client import OgxClient
+    except ImportError as e:
+        raise ImportError("OgxClient was not found, install with `uv pip install ogx[client]`") from e
 
     if "ogx_client_prepare_request" in _original_methods:
         return
@@ -332,7 +327,6 @@ def patch_httpx_for_test_id():
     def patched_prepare_request(self, request):
         # Call original first (it's a sync method that returns None)
         # Use .get() to handle cases where the originals weren't stored yet
-        # (e.g. class identity mismatch between ogx_open_client and ogx_client)
         ogx_orig = _original_methods.get("ogx_client_prepare_request")
         if ogx_orig is not None:
             ogx_orig(self, request)

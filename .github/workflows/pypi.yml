@@ -376,8 +376,8 @@ jobs:
         working-directory: ${{ matrix.path }}
         run: |
           VERSION="${{ needs.compute-version.outputs.version }}"
-          echo "Generating SDK with OPEN=0 (ogx_client) at version ${VERSION}..."
-          make sdk OPEN=0 VERSION="${VERSION}"
+          echo "Generating SDK (ogx_client) at version ${VERSION}..."
+          make sdk VERSION="${VERSION}"
 
           cd sdks/python
           echo "Building Python package..."

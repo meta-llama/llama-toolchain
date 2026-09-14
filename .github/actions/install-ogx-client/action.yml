@@ -100,8 +100,8 @@ runs:
       shell: bash
       working-directory: client-sdks/openapi
       run: |
-        echo "Generating ogx-client SDK (OPEN=0) from checkout..."
-        make sdk OPEN=0
+        echo "Generating ogx-client SDK from checkout..."
+        make sdk
 
         PY_FILE_COUNT=$(find sdks/python -name "*.py" | wc -l)
         echo "Generated Python files: $PY_FILE_COUNT"
