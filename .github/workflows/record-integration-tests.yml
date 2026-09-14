@@ -281,12 +281,9 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           create_credentials_file: true
 
-      # TEMPORARY: in-repo action refs (no pinned SHA) so this branch can
-      # verify the reordered HuggingFace pre-download against its own
-      # checkout. Revert both refs to pinned ogx-ai/ogx SHAs before merging.
       - name: Setup test environment
         if: steps.should_run.outputs.run == 'true'
-        uses: ./.github/actions/setup-test-environment
+        uses: ogx-ai/ogx/.github/actions/setup-test-environment@a6641e863ebc27120c4d87862fcb11bbfe935a1a
         with:
           python-version: "3.12"
           client-version: "latest"
@@ -320,7 +317,7 @@ jobs:
 
       - name: Run and record tests
         if: steps.should_run.outputs.run == 'true'
-        uses: ./.github/actions/run-and-record-tests
+        uses: ogx-ai/ogx/.github/actions/run-and-record-tests@a6641e863ebc27120c4d87862fcb11bbfe935a1a
         env:
           OPENAI_API_KEY: ${{ matrix.provider.setup == 'gpt' && secrets.OPENAI_API_KEY || '' }}
           AZURE_API_KEY: ${{ matrix.provider.setup == 'azure' && secrets.AZURE_API_KEY || '' }}

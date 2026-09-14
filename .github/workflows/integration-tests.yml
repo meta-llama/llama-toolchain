@@ -166,13 +166,9 @@ jobs:
       # Note: Using full repo path with pinned SHA ensures actions are loaded from
       # a trusted commit, not from PR checkout. This is critical for security when
       # called from pull_request_target workflows.
-      #
-      # TEMPORARY: in-repo action refs (no pinned SHA) so this branch can verify
-      # the reordered HuggingFace pre-download against its own checkout. Revert
-      # to pinned ogx-ai/ogx SHAs before merging.
       - name: Setup test environment
         if: ${{ matrix.config.allowed_clients == null || contains(matrix.config.allowed_clients, matrix.client) }}
-        uses: ./.github/actions/setup-test-environment
+        uses: ogx-ai/ogx/.github/actions/setup-test-environment@a6641e863ebc27120c4d87862fcb11bbfe935a1a
         with:
           python-version: ${{ matrix.python-version }}
           client-version: ${{ matrix.client-version }}
@@ -199,7 +195,7 @@ jobs:
 
       - name: Run tests
         if: ${{ matrix.config.allowed_clients == null || contains(matrix.config.allowed_clients, matrix.client) }}
-        uses: ./.github/actions/run-and-record-tests
+        uses: ogx-ai/ogx/.github/actions/run-and-record-tests@a6641e863ebc27120c4d87862fcb11bbfe935a1a
         env:
           OPENAI_API_KEY: dummy
           AZURE_API_KEY: replay-mode-dummy-key
