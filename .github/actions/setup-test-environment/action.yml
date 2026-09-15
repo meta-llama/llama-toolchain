@@ -8,10 +8,6 @@ inputs:
   client-version:
     description: 'Client version (latest or published)'
     required: true
-  sdk_install_url:
-    description: 'URL to install Python SDK from (for testing preview builds). If provided, overrides client-version.'
-    required: false
-    default: ''
   setup:
     description: 'Setup to configure (ollama, vllm, gpt, etc.)'
     required: false
@@ -79,7 +75,6 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
         client-version: ${{ inputs.client-version }}
-        sdk_install_url: ${{ inputs.sdk_install_url }}
         branch: ${{ inputs.branch }}
 
     - name: Setup ollama

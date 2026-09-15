@@ -43,10 +43,6 @@ on:
         default: 'ollama'
   workflow_call:
     inputs:
-      sdk_install_url:
-        required: false
-        type: string
-        description: 'URL to install Python SDK from (for testing preview builds)'
       matrix_key:
         required: false
         type: string
@@ -172,7 +168,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           client-version: ${{ matrix.client-version }}
-          sdk_install_url: ${{ inputs.sdk_install_url || '' }}
           setup: ${{ matrix.config.setup }}
           suite: ${{ matrix.config.suite }}
           inference-mode: ${{ matrix.config.inference_mode || 'replay' }}

@@ -28,7 +28,7 @@ from fastapi import Response as FastAPIResponse
 from ogx.core.utils.type_inspection import is_body_param, is_unwrapped_body_param
 
 try:
-    from ogx_open_client import (  # type: ignore[import-not-found]
+    from ogx_client import (
         NOT_GIVEN,
         APIResponse,
         AsyncAPIResponse,
@@ -36,20 +36,8 @@ try:
         AsyncStream,
         OgxClient,
     )
-except ImportError:
-    try:
-        from ogx_client import (  # type: ignore[import-not-found,assignment,no-redef]
-            NOT_GIVEN,
-            APIResponse,
-            AsyncAPIResponse,
-            AsyncOgxClient,
-            AsyncStream,
-            OgxClient,
-        )
-    except ImportError as e:
-        raise ImportError(
-            "ogx-open-client is not installed. Please install it with `uv pip install ogx[openclient]` or `uv pip install ogx[client]`."
-        ) from e
+except ImportError as e:
+    raise ImportError("ogx-client is not installed. Please install it with `uv pip install ogx[client]`.") from e
 
 from pydantic import BaseModel, TypeAdapter
 from rich.console import Console
@@ -246,11 +234,7 @@ async def _route_call_in_process(
     from urllib.parse import parse_qs, urlparse
 
     from fastapi.responses import StreamingResponse
-
-    try:
-        from ogx_open_client.rest import RESTResponse  # type: ignore[import-not-found]
-    except ImportError:
-        from ogx_client.rest import RESTResponse  # type: ignore[import-not-found,assignment,no-redef]
+    from ogx_client.rest import RESTResponse
 
     # Extract path from full URL (strip http://localhost:port prefix)
     parsed = urlparse(url)
@@ -353,7 +337,7 @@ async def _route_call_in_process(
                 # client cannot lazily consume an async iterator from its
                 # synchronous call_api path (Stream.iter_bytes() requires a
                 # SyncByteStream). The sync client already has a separate lazy
-                # streaming path via _stream_request() for the stainless SDK.
+                # streaming path via _stream_request().
                 chunks: list[bytes] = []
                 async for chunk in result.body_iterator:
                     if isinstance(chunk, str):
@@ -442,7 +426,7 @@ class OGXAsLibraryClient(OgxClient):
         # Patch api_client.call_api to route requests in-process instead of over HTTP.
         # The generated SDK's call chain is: API method → api_client.call_api() → rest.request() → httpx.
         # We intercept at call_api so the request never reaches httpx/network.
-        # Only applies to ogx_open_client; the stainless SDK uses a request() override instead.
+        # Applies to the OpenAPI-generated ogx_client, which exposes api_client.call_api.
         if hasattr(self, "api_client") and hasattr(self.api_client, "call_api"):
             self._original_call_api = self.api_client.call_api
             self.api_client.call_api = self._in_process_call_api  # type: ignore[method-assign]
@@ -750,7 +734,7 @@ class AsyncOGXAsLibraryClient(AsyncOgxClient):
         # The generated async SDK's call chain is:
         #   Async*Api method → await api_client.call_api() → httpx.AsyncClient → network
         # We intercept at call_api so the request never reaches the network.
-        # Only applies to ogx_open_client; the stainless SDK uses a request() override instead.
+        # Applies to the OpenAPI-generated ogx_client, which exposes api_client.call_api.
         if hasattr(self, "api_client") and hasattr(self.api_client, "call_api"):
             self.api_client.call_api = self._in_process_call_api  # type: ignore[method-assign]
 

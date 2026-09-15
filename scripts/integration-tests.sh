@@ -396,12 +396,13 @@ run_client_ts_tests() {
         npm install "$TS_CLIENT_PATH" --silent
     else
         # It's an npm version specifier - install from npm
+        # (no --silent: it suppresses even npm errors, which hid this install's ETARGET failure from CI logs)
         echo "Installing ogx-client@${TS_CLIENT_PATH} from npm"
         if [[ "${CI:-}" == "true" || "${CI:-}" == "1" ]]; then
             npm ci --silent
-            npm install "ogx-client@${TS_CLIENT_PATH}" --silent
+            npm install "ogx-client@${TS_CLIENT_PATH}"
         else
-            npm install "ogx-client@${TS_CLIENT_PATH}" --silent
+            npm install "ogx-client@${TS_CLIENT_PATH}"
         fi
     fi
 
