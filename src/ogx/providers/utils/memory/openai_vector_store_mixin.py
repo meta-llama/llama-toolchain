@@ -1384,7 +1384,6 @@ class OpenAIVectorStoreMixin(ABC):
 
                 # Prepare embedding request for all chunks
                 chunk_texts = [interleaved_content_as_str(c.content) for c in chunks]
-                vector_store_file_object.usage_bytes = sum(len(text.encode("utf-8")) for text in chunk_texts)
                 params = OpenAIEmbeddingsRequestWithExtraBody(
                     model=embedding_model,
                     input=chunk_texts,
@@ -1416,6 +1415,9 @@ class OpenAIVectorStoreMixin(ABC):
                         chunks=embedded_chunks,
                     )
                 )
+                # Only counted once chunks are actually inserted, so a failed
+                # embed/insert never contributes to the store's usage total.
+                vector_store_file_object.usage_bytes = sum(len(text.encode("utf-8")) for text in chunk_texts)
                 vector_store_file_object.status = "completed"
         except HTTPException as e:
             logger.warning(
@@ -1618,6 +1620,7 @@ class OpenAIVectorStoreMixin(ABC):
         store_info["file_ids"].remove(file_id)
         store_info["file_counts"][file.status] -= 1
         store_info["file_counts"]["total"] -= 1
+        store_info["usage_bytes"] = max(0, store_info.get("usage_bytes", 0) - file.usage_bytes)
         self.openai_vector_stores[vector_store_id] = store_info
 
         # Save updated vector store to persistent storage
