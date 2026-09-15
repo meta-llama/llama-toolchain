@@ -186,8 +186,10 @@ class RunConfigSettings(BaseModel):
                         config=config,
                     ).model_dump(exclude_none=True)
                 )
-        # Get unique set of APIs from providers
-        apis = sorted(providers.keys())
+        # Get unique set of APIs from providers. `conversations` is served by a built-in
+        # implementation rather than a provider, so it never appears in the provider map;
+        # list it explicitly so `apis:` stays the source of truth for the served surface.
+        apis = sorted(set(providers.keys()) | {Api.conversations.value})
 
         storage_backends = self.storage_backends or {
             "kv_default": SqliteKVStoreConfig.sample_run_config(
