@@ -4,11 +4,12 @@ This directory holds `ogx.tex` (and its build artifacts `ogx.bbl`, `ogx.pdf`,
 `references.bib`), a standalone, diagram-heavy technical whitepaper. **It is a
 separate document from the JOSS submission**, not an alternate build of it.
 
-- **JOSS manuscript:** [`paper.md`](https://github.com/ogx-ai/ogx/blob/5f0d8b975da04364c1687b3cf3215d25da505201/paper.md)
-  and [`paper.bib`](https://github.com/ogx-ai/ogx/blob/5f0d8b975da04364c1687b3cf3215d25da505201/paper.bib)
-  at commit `5f0d8b975da04364c1687b3cf3215d25da505201`, including the
+- **JOSS manuscript:** [`paper.md`](https://github.com/ogx-ai/ogx/blob/13b2660b70a61bcc7236b64e0a26483f7ab81b70/paper.md)
+  and [`paper.bib`](https://github.com/ogx-ai/ogx/blob/13b2660b70a61bcc7236b64e0a26483f7ab81b70/paper.bib)
+  at commit `13b2660b70a61bcc7236b64e0a26483f7ab81b70`, including the
   corrected portability and moderation claims, release-scoped provider
-  counts, API stability wording, and bibliography corrections. These links
+  counts, API stability wording, bibliography corrections, and dated
+  community metrics. These links
   identify the manuscript independently of the
   software release tag.
 - **This whitepaper:** `ogx.tex`, built against `references.bib` and `ogx.bbl`
@@ -29,7 +30,7 @@ manuscript are identified independently:
 | --- | --- | --- |
 | OGX software | `v1.0.3` | commit `5393c94b2d23a3069b3708f9ca81ad350d2deb21` |
 | OGX Kubernetes Operator | `v0.10.0` | commit `7fa16532e1434bf74493ca305b1e21030914ae57` |
-| Manuscript (`paper.md` / `paper.bib`) | -- | commit `5f0d8b975da04364c1687b3cf3215d25da505201` |
+| Manuscript (`paper.md` / `paper.bib`) | -- | commit `13b2660b70a61bcc7236b64e0a26483f7ab81b70` |
 
 The operator reference is an existing tagged source snapshot. Its
 [`OGXServer` API](https://github.com/ogx-ai/ogx-k8s-operator/blob/7fa16532e1434bf74493ca305b1e21030914ae57/api/v1beta1/ogxserver_types.go)
@@ -72,6 +73,11 @@ manuscript. Their routes in reviewed main are `/v1alpha/containers` and
 The [reference audit](reference-audit.md) records checks of the 19 entries
 without DOIs and the verified bibliography corrections.
 
+The [community metrics audit](community-audit.md) pins the historical Git
+snapshot and documents the publication-date filter behind the manuscript's
+commit and release counts, along with the reason for removing the ambiguous
+historical star and contributor figures.
+
 ## JOSS proof
 
 The [JOSS proof generated on 10 September 2026 at 20:51 UTC](https://github.com/openjournals/joss-papers/blob/86bf0fe916ed4c2c753cf90221f91b78a1efb143/joss.11234/10.21105.joss.11234.pdf)
@@ -90,7 +96,8 @@ operator source references on page 5, and the corrected SGLang author list
 and DOI on page 6.
 
 That proof predates the portability, moderation, provider-count, API stability,
-and bibliography corrections pinned above. After merging those updates, run
+bibliography, and community-metric corrections pinned above. After merging
+those updates, run
 `@editorialbot generate pdf` on the
 [JOSS review issue](https://github.com/openjournals/joss-reviews/issues/11234)
 to generate a proof with the revised manuscript, and
