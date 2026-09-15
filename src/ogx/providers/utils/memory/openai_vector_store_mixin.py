@@ -1383,9 +1383,11 @@ class OpenAIVectorStoreMixin(ABC):
                 # Generate embeddings for all chunks before insertion
 
                 # Prepare embedding request for all chunks
+                chunk_texts = [interleaved_content_as_str(c.content) for c in chunks]
+                vector_store_file_object.usage_bytes = sum(len(text.encode("utf-8")) for text in chunk_texts)
                 params = OpenAIEmbeddingsRequestWithExtraBody(
                     model=embedding_model,
-                    input=[interleaved_content_as_str(c.content) for c in chunks],
+                    input=chunk_texts,
                     dimensions=embedding_dimension,
                 )
                 resp = await self.inference_api.openai_embeddings(params)
@@ -1454,6 +1456,7 @@ class OpenAIVectorStoreMixin(ABC):
             store_info["file_ids"].append(file_id)
             store_info["file_counts"]["total"] += 1
             store_info["file_counts"][vector_store_file_object.status] += 1
+            store_info["usage_bytes"] = store_info.get("usage_bytes", 0) + vector_store_file_object.usage_bytes
 
             # Save updated vector store to persistent storage
             await self._save_openai_vector_store(vector_store_id, store_info)

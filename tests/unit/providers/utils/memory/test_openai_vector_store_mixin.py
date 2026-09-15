@@ -27,7 +27,7 @@ from ogx_api import (
     VectorStoreChunkingStrategyAuto,
     VectorStoreNotFoundError,
 )
-from ogx_api.vector_io.models import OpenAIAttachFileRequest
+from ogx_api.vector_io.models import Chunk, ChunkMetadata, OpenAIAttachFileRequest
 
 
 def _make_store_info():
@@ -184,6 +184,39 @@ class TestOpenAIVectorStoreMixin:
         assert process_request.file_id == file_id
         assert process_request.options == options
         assert isinstance(process_request.chunking_strategy, VectorStoreChunkingStrategyAuto)
+
+    async def test_usage_bytes_reflects_indexed_content(self, mock_inference_api, mock_files_api, mock_kvstore):
+        """usage_bytes must be computed from the indexed chunks, not left at its 0 default (#6542)."""
+        text = "hello world"
+        mock_file_processor_api = AsyncMock()
+        mock_file_processor_api.process_file.return_value = MagicMock(
+            chunks=[Chunk(content=text, chunk_id="c1", chunk_metadata=ChunkMetadata())],
+            metadata={},
+        )
+        mock_inference_api.openai_embeddings.return_value = MagicMock(data=[MagicMock(embedding=[0.1, 0.2])])
+
+        mixin = MockVectorStoreMixin(
+            inference_api=mock_inference_api,
+            files_api=mock_files_api,
+            kvstore=mock_kvstore,
+            file_processor_api=mock_file_processor_api,
+        )
+        vector_store_id = "test_vector_store"
+        store_info = _make_store_info()
+        store_info["metadata"] = {"embedding_model": "ollama/nomic-embed-text", "embedding_dimension": "2"}
+        mixin.openai_vector_stores[vector_store_id] = store_info
+
+        result = await mixin.openai_attach_file_to_vector_store(
+            vector_store_id=vector_store_id,
+            request=OpenAIAttachFileRequest(
+                file_id="test_file_id", chunking_strategy=VectorStoreChunkingStrategyAuto()
+            ),
+        )
+
+        expected_bytes = len(text.encode("utf-8"))
+        assert result.status == "completed"
+        assert result.usage_bytes == expected_bytes
+        assert mixin.openai_vector_stores[vector_store_id]["usage_bytes"] == expected_bytes
 
 
 class TestKVStoreToSQLMigration:
