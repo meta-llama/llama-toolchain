@@ -227,6 +227,58 @@ def test_openai_completion_streaming(ogx_client, client_with_models, text_model_
     assert len(content_str) > 10
 
 
+@pytest.mark.parametrize(
+    "test_case",
+    [
+        "inference:completion:sanity",
+    ],
+)
+def test_openai_completion_streaming_usage_chunk(ogx_client, client_with_models, text_model_id, test_case):
+    """A streaming completion with include_usage ends with a final chunk that has an
+    empty choices list and a populated usage object. OpenAI emits that chunk when
+    include_usage is set; Fireworks sends it by default.
+
+    Every chunk must deserialize into an OpenAICompletion. The trailing
+    empty-choices chunk must not degrade to a raw dict (which happens while
+    OpenAICompletion.choices still has min_length=1), and its usage must be
+    preserved.
+    """
+    skip_if_model_doesnt_support_openai_completion(client_with_models, text_model_id)
+    tc = TestCase(test_case)
+
+    response = ogx_client.completions.create(
+        model=text_model_id,
+        prompt=tc["content"],
+        stream=True,
+        max_tokens=20,
+        stream_options={"include_usage": True},
+    )
+
+    chunks = list(response)
+    assert chunks, "expected at least one streamed chunk"
+
+    # A raw dict means OpenAICompletion.from_dict rejected the payload; the
+    # trailing empty-choices usage chunk trips this while choices has min_length=1.
+    for chunk in chunks:
+        assert not isinstance(chunk, dict), (
+            "stream yielded a raw dict instead of OpenAICompletion; the empty-choices usage chunk failed to deserialize"
+        )
+
+    # include_usage streams end with an empty-choices usage chunk.
+    usage_chunks = [chunk for chunk in chunks if not chunk.choices]
+    assert usage_chunks, "expected a trailing chunk with an empty choices list"
+    trailing = usage_chunks[-1]
+    assert trailing.usage is not None, "trailing chunk must carry a populated usage object"
+    usage = trailing.usage.model_dump() if hasattr(trailing.usage, "model_dump") else trailing.usage
+    assert usage.get("total_tokens", 0) > 0
+    assert usage.get("prompt_tokens", 0) > 0
+    assert usage.get("completion_tokens", 0) > 0
+
+    # Non-usage chunks must still carry content.
+    content = "".join(chunk.choices[0].text or "" for chunk in chunks if chunk.choices)
+    assert content.strip(), "expected some streamed content"
+
+
 def test_openai_completion_guided_choice(ogx_client, client_with_models, text_model_id):
     skip_if_provider_isnt_vllm(client_with_models, text_model_id)
 
