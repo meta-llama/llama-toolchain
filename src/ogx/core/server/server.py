@@ -60,6 +60,11 @@ REPO_ROOT = Path(__file__).parent.parent.parent.parent
 
 logger = get_logger(name=__name__, category="core::server")
 
+# APIs served regardless of what `apis:` says. They are backed by built-in
+# implementations rather than by providers, so they never appear in the provider map that
+# generated `apis:` lists are derived from and a config has no way to opt into them.
+ALWAYS_SERVED_APIS = ("admin", "conversations", "inspect", "prompts", "providers")
+
 
 def warn_with_traceback(
     message: Warning | str,
@@ -135,6 +140,24 @@ class StackApp(FastAPI):
         self.stack: Stack = Stack(config)
 
 
+def apis_to_serve(run_config: StackConfig, impls: dict[Api, Any]) -> set[str]:
+    """Return the names of the APIs whose HTTP routers should be registered.
+
+    An explicit `apis:` list is authoritative, including when it is empty. Only an absent
+    list falls back to serving everything the providers give us.
+    """
+    served = set(run_config.apis) if run_config.apis is not None else {api.value for api in impls}
+
+    for inf in builtin_automatically_routed_apis():
+        # if we do not serve the corresponding router API, we should not serve the routing table API
+        if inf.router_api.value not in served:
+            continue
+        served.add(inf.routing_table_api.value)
+
+    served.update(ALWAYS_SERVED_APIS)
+    return served
+
+
 @asynccontextmanager
 async def lifespan(app: StackApp) -> AsyncIterator[None]:
     """FastAPI lifespan context manager that starts background tasks and handles shutdown.
@@ -163,24 +186,9 @@ async def lifespan(app: StackApp) -> AsyncIterator[None]:
     if external_apis:
         register_external_api_routers(external_apis)
 
-    if app.stack.run_config.apis:
-        apis_to_serve = set(app.stack.run_config.apis)
-    else:
-        apis_to_serve = set(impls.keys())
+    served_apis = apis_to_serve(app.stack.run_config, impls)
 
-    for inf in builtin_automatically_routed_apis():
-        # if we do not serve the corresponding router API, we should not serve the routing table API
-        if inf.router_api.value not in apis_to_serve:
-            continue
-        apis_to_serve.add(inf.routing_table_api.value)
-
-    apis_to_serve.add("admin")
-    apis_to_serve.add("inspect")
-    apis_to_serve.add("providers")
-    apis_to_serve.add("prompts")
-    apis_to_serve.add("conversations")
-
-    for api_str in apis_to_serve:
+    for api_str in served_apis:
         api = Api(api_str)
         impl = impls[api]
         router = build_fastapi_router(api, impl)
@@ -188,7 +196,7 @@ async def lifespan(app: StackApp) -> AsyncIterator[None]:
             app.include_router(router)
             logger.debug("Registered FastAPI router", api=str(api))
 
-    logger.debug("Serving APIs", apis=list(apis_to_serve))
+    logger.debug("Serving APIs", apis=list(served_apis))
 
     # Start the registry refresh background task
     app.stack.create_registry_refresh_task()
