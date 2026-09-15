@@ -134,7 +134,7 @@ OGX has realized impact through both public deployments and customer production 
 
 The security architecture---specifically, the multitenant isolation model combining ABAC-gated retrieval, server-side orchestration, and pluggable provider backends---was formally analyzed in a peer-reviewed publication at the ACM Conference on AI and Agentic Systems [@arceo2026securing]. OGX conforms to the Open Responses specification [@openresponses] and serves as a reference implementation for open, vendor-neutral agentic AI APIs.
 
-As of June 2026, the project has over 8,400 GitHub stars, 242 contributors, 4,000 commits, and 68 releases across nearly two years of public development. Community engagement includes weekly contributor calls, an active Discord server, and integrations contributed by external organizations including Red Hat, IBM, Oracle, and Infinispan.
+By 2 June 2026, the project had accumulated over 4,000 Git commits and published 68 GitHub releases (including one prerelease), with Git history dating to July 2024. Community engagement includes weekly contributor calls, an active Discord server, and integrations contributed by external organizations including Red Hat, IBM, Oracle, and Infinispan.
 
 # AI Usage Disclosure
 
