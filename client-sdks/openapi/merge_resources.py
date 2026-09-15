@@ -6,11 +6,11 @@
 # the root directory of this source tree.
 
 """
-Merge Stainless configuration into OpenAPI spec.
+Merge the resource-hierarchy config into the OpenAPI spec.
 
 This script takes:
-1. client-sdks/stainless/openapi.yml - Base OpenAPI specification
-2. client-sdks/stainless/config.yml - Stainless resource configuration
+1. client-sdks/spec/openapi.yml - Base OpenAPI specification
+2. client-sdks/spec/resources.yml - Resource-hierarchy configuration
 3. (Optional) patch file - Additional modifications to apply
 
 And produces:
@@ -64,9 +64,9 @@ def parse_endpoint(endpoint_str: str) -> tuple[str, str]:
         return None, parts[0]
 
 
-def extract_resources(stainless_config: dict[str, Any]) -> tuple[dict[str, Any], set[str], list[dict[str, Any]]]:
+def extract_resources(resources_config: dict[str, Any]) -> tuple[dict[str, Any], set[str], list[dict[str, Any]]]:
     """
-    Extract resource->method->endpoint mappings from Stainless config.
+    Extract resource->method->endpoint mappings from the resource-hierarchy config.
 
     Returns:
         Tuple of (endpoint_map, collision_set, proxy_methods)
@@ -78,7 +78,7 @@ def extract_resources(stainless_config: dict[str, Any]) -> tuple[dict[str, Any],
           - child_nesting_path: the nesting path of the child (subresource)
           - method_name: the method name (e.g., "list")
     """
-    resources = stainless_config.get("resources", {})
+    resources = resources_config.get("resources", {})
     endpoint_map = {}
     resource_name_counts = {}  # Count how many times each resource name appears
     proxy_methods = []
@@ -223,7 +223,7 @@ def enrich_openapi_spec(
                         for alias in resource_info["aliases"]
                     ]
 
-                # Build tags based on the resource hierarchy from Stainless
+                # Build tags based on the resource hierarchy
                 nesting_path = resource_info["nesting_path"]
                 if nesting_path:
                     tags = []
@@ -374,16 +374,16 @@ def apply_patches(openapi_spec: dict[str, Any], patch_config: dict[str, Any]) ->
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Merge Stainless configuration into OpenAPI spec")
+    parser = argparse.ArgumentParser(description="Merge the resource-hierarchy config into the OpenAPI spec")
     parser.add_argument(
         "--openapi",
-        default="client-sdks/stainless/openapi.yml",
-        help="Path to base OpenAPI specification (default: client-sdks/stainless/openapi.yml)",
+        default="client-sdks/spec/openapi.yml",
+        help="Path to base OpenAPI specification (default: client-sdks/spec/openapi.yml)",
     )
     parser.add_argument(
-        "--stainless",
-        default="client-sdks/stainless/config.yml",
-        help="Path to Stainless configuration (default: client-sdks/stainless/config.yml)",
+        "--resources",
+        default="client-sdks/spec/resources.yml",
+        help="Path to the resource-hierarchy config (default: client-sdks/spec/resources.yml)",
     )
     parser.add_argument("--patch", help="Optional patch file with additional modifications to apply")
     parser.add_argument(
@@ -400,25 +400,25 @@ def main():
     yaml_loader.default_flow_style = False
 
     openapi_path = Path(args.openapi)
-    stainless_path = Path(args.stainless)
+    resources_path = Path(args.resources)
     output_path = Path(args.output)
 
     if not openapi_path.exists():
         print(f"Error: OpenAPI spec not found: {openapi_path}", file=sys.stderr)
         sys.exit(1)
 
-    if not stainless_path.exists():
-        print(f"Error: Stainless config not found: {stainless_path}", file=sys.stderr)
+    if not resources_path.exists():
+        print(f"Error: Resource-hierarchy config not found: {resources_path}", file=sys.stderr)
         sys.exit(1)
 
     with open(openapi_path) as f:
         openapi_spec = yaml_loader.load(f)
 
-    with open(stainless_path) as f:
-        stainless_config = yaml_loader.load(f)
+    with open(resources_path) as f:
+        resources_config = yaml_loader.load(f)
 
     # Extract resource mappings
-    endpoint_map, collision_set, proxy_methods = extract_resources(stainless_config)
+    endpoint_map, collision_set, proxy_methods = extract_resources(resources_config)
 
     if proxy_methods:
         print(f"Detected {len(proxy_methods)} proxy method(s) for shared endpoints:")
