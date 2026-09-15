@@ -26,6 +26,7 @@ These jobs come from the `default` section of `ci_matrix.json`. They all run in 
 | `messages` | `ollama` | `messages` only |
 | `messages-openai` | `gpt` | `messages` only |
 | `interactions` | `gemini` | `interactions` only |
+| `base` | `fireworks` |  |
 
 ## CI Lanes (Scheduled)
 
@@ -42,6 +43,7 @@ Cron: `1 0 * * 0`
 |-------|------------|--------------|-----------------|--------------|------------|--------------|
 | `azure` | azure/gpt-4o | azure/gpt-4o | sentence-transformers/nomic-ai/nomic-embed-text-v1.5 | — | `responses` | — |
 | `bedrock` | bedrock/openai.gpt-oss-20b-1:0 | — | sentence-transformers/nomic-ai/nomic-embed-text-v1.5 | — | `bedrock`, `bedrock-responses` | — |
+| `fireworks` | fireworks/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b | — | fireworks/accounts/fireworks/models/qwen3-embedding-8b | — | `base` | — |
 | `gemini` | gemini/gemini-2.5-flash-lite | — | gemini/text-embedding-004 | — | `interactions` | — |
 | `gpt` | openai/gpt-4o | openai/gpt-4o | openai/text-embedding-3-small | — | `responses`, `messages-openai` | — |
 | `gpt-reasoning` | openai/o4-mini | — | — | — | `gpt-reasoning` | — |
@@ -61,7 +63,6 @@ Cron: `1 0 * * 0`
 | `anthropic` | anthropic/claude-3-5-haiku-20241022 | — | — | — | — | — |
 | `cerebras` | cerebras/gpt-oss-120b | — | — | — | — | — |
 | `databricks` | databricks/databricks-meta-llama-3-3-70b-instruct | — | databricks/databricks-bge-large-en | — | — | — |
-| `fireworks` | fireworks/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b | — | fireworks/accounts/fireworks/models/qwen3-embedding-8b | — | — | — |
 | `groq` | groq/llama-3.3-70b-versatile | — | — | — | — | — |
 | `llama-api` | llama_openai_compat/Llama-3.3-8B-Instruct | — | — | — | — | — |
 | `llama-cpp-server` | llama-cpp-server/qwen2.5 | — | sentence-transformers/nomic-embed-text-v1.5 | — | — | — |
