@@ -2,6 +2,7 @@ version: 2
 distro_name: ci-tests
 apis:
 - batches
+- conversations
 - file_processors
 - files
 - inference
