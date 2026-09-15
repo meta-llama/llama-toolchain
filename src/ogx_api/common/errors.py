@@ -13,6 +13,19 @@ import httpx
 from pydantic import BaseModel
 
 
+def openai_error_type_for_status(status_code: int) -> str:
+    """Return the OpenAI ``error.type`` value that matches an HTTP status code.
+
+    OpenAI always populates ``error.type``, and clients branch on it, so every
+    error body OGX emits should carry one.
+    """
+    if status_code == httpx.codes.TOO_MANY_REQUESTS:
+        return "rate_limit_error"
+    if status_code >= httpx.codes.INTERNAL_SERVER_ERROR:
+        return "server_error"
+    return "invalid_request_error"
+
+
 class OpenAIErrorDetail(BaseModel):
     """Inner error object matching the OpenAI API error format.
 
@@ -30,7 +43,7 @@ class OpenAIErrorResponse(BaseModel):
 
     Usage::
 
-        err = OpenAIErrorResponse.from_message("Not found")
+        err = OpenAIErrorResponse.for_status(404, "Not found")
         return JSONResponse(status_code=404, content=err.to_dict())
         await send({"type": "http.response.body", "body": err.to_bytes()})
     """
@@ -43,6 +56,13 @@ class OpenAIErrorResponse(BaseModel):
     ) -> "OpenAIErrorResponse":
         """Create an error response from a message string or exception."""
         return cls(error=OpenAIErrorDetail(message=str(message), type=type, code=code))
+
+    @classmethod
+    def for_status(
+        cls, status_code: int, message: str | Exception, *, code: str | None = None
+    ) -> "OpenAIErrorResponse":
+        """Create an error response with the ``type`` implied by the HTTP status code."""
+        return cls.from_message(message, type=openai_error_type_for_status(status_code), code=code)
 
     def to_dict(self) -> dict:
         """Return a dict suitable for JSONResponse content or SSE events."""
