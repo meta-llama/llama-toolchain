@@ -1,6 +1,7 @@
 version: 2
 distro_name: rag-benchmarks
 apis:
+- conversations
 - files
 - file_processors
 - inference

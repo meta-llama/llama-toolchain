@@ -1,6 +1,7 @@
 version: 2
 distro_name: open-benchmark
 apis:
+- conversations
 - inference
 - responses
 - tool_runtime
